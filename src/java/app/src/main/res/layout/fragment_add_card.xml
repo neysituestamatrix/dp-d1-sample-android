@@ -1,0 +1,91 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.addcard.AddCardFragment">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Name"
+            android:inputType="text"
+            android:text="@={mViewModel.mName}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Address1"
+            android:inputType="text"
+            android:text="@={mViewModel.mAddress1}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Address2"
+            android:inputType="text"
+            android:text="@={mViewModel.mAddress2}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Country Code"
+            android:inputType="text"
+            android:text="@={mViewModel.mCountryCode}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Locality"
+            android:inputType="text"
+            android:text="@={mViewModel.mLocality}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Administration Area"
+            android:inputType="text"
+            android:text="@={mViewModel.mAdministrativeArea}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Phone Number"
+            android:inputType="text"
+            android:text="@={mViewModel.mPhoneNumber}" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Postal Code"
+            android:inputType="text"
+            android:text="@={mViewModel.mPostalCode}" />
+
+        <Button
+            android:id="@+id/bt_add_card_to_wallet"
+            android:layout_margin="10dp"
+            android:text="Add Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <data>
+
+        <variable
+            name="mViewModel"
+            type="com.thalesgroup.mobile.d1sample.ui.addcard.AddCardViewModel" />
+    </data>
+
+</layout>
+
