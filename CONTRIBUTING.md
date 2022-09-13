@@ -1,4 +1,4 @@
-# Contributing to IdCloud Tutorials Android
+# Contributing to D1 Sample Android
 :+1: Thanks for your interest and taking time to contribute :+1: 
 
 #### Table Of Contents
