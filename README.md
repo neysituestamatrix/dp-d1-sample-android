@@ -35,7 +35,10 @@ debugImplementation(name: 'd1-debug', ext: 'aar')
 ```
 
 ```bash
-app
+app/
+├── build.gradle
+├── proguard-rules.pro
+├── src
 └── libs
     ├── d1-debug.aar
     └── d1-release.aar
