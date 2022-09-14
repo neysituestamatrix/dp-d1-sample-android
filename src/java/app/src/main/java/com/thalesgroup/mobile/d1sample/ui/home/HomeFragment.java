@@ -1,5 +1,9 @@
 package com.thalesgroup.mobile.d1sample.ui.home;
 
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +13,16 @@ import android.widget.Toast;
 
 import com.thalesgroup.gemalto.d1.validation.BuildConfig;
 import com.thalesgroup.gemalto.d1.validation.R;
-import com.thalesgroup.mobile.d1sample.MainActivity;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
-import com.thalesgroup.mobile.d1sample.ui.base.BaseViewModel;
 import com.thalesgroup.mobile.d1sample.ui.d1paydigitalcardlist.D1PayDigitalCardListFragment;
 import com.thalesgroup.mobile.d1sample.ui.login.LoginFragment;
-import com.thalesgroup.mobile.d1sample.ui.login.LoginViewModel;
 import com.thalesgroup.mobile.d1sample.ui.physicalcardlist.PhysicalCardListFragment;
 import com.thalesgroup.mobile.d1sample.ui.virtualcardlist.VirtualCardListFragment;
-import com.thalesgroup.mobile.d1sample.ui.virtualcardlist.VirtualCardListViewModel;
 
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 /**

@@ -1,14 +1,15 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.ui.virtualcardlist;
 
 import android.view.View;
 
-import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.mobile.d1sample.ui.basecardlist.AbstractCardListFragment;
 import com.thalesgroup.mobile.d1sample.ui.virtualcarddetail.VirtualCardDetailFragment;
-import com.thalesgroup.mobile.d1sample.ui.login.LoginFragment;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 

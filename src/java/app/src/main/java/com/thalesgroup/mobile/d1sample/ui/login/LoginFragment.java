@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.ui.login;
 
 import android.os.Bundle;
@@ -9,7 +13,6 @@ import android.widget.Toast;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
 import com.thalesgroup.mobile.d1sample.ui.home.HomeFragment;
-import com.thalesgroup.mobile.d1sample.ui.virtualcardlist.VirtualCardListFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

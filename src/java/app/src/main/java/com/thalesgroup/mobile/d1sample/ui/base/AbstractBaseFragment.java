@@ -1,6 +1,9 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.ui.base;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import com.thalesgroup.mobile.d1sample.MainActivity;

@@ -1,7 +1,10 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.ui.virtualcarddetail;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,13 +17,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.thalesgroup.gemalto.d1.card.CardDataChangedListener;
 import com.thalesgroup.gemalto.d1.card.CardDigitizationState;
 import com.thalesgroup.gemalto.d1.card.State;
 import com.thalesgroup.gemalto.d1.d1pay.D1HCEService;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.gemalto.d1.validation.databinding.FragmentCardDetailBinding;
-import com.thalesgroup.mobile.d1sample.ui.addcard.AddCardFragment;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
 import com.thalesgroup.mobile.d1sample.ui.d1paydigitalcard.D1PayDigitalCardFragment;
 import com.thalesgroup.mobile.d1sample.ui.digitalcardlist.DigitalCardListFragment;
@@ -30,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**

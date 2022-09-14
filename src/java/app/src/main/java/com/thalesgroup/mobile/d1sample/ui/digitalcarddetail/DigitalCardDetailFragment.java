@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.ui.digitalcarddetail;
 
 import android.os.Bundle;

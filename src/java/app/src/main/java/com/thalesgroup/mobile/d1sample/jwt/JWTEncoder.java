@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.jwt;
 
 import android.util.Base64;

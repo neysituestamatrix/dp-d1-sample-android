@@ -1,28 +1,8 @@
-package com.thalesgroup.mobile.d1sample.sdk;
-
 /*
- * MIT License
- *
- * Copyright (c) 2020 Thales DIS
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright © 2022 THALES. All rights reserved.
  */
+
+package com.thalesgroup.mobile.d1sample.sdk;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -30,9 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.thalesgroup.gemalto.d1.CardPINUI;
@@ -51,7 +28,6 @@ import com.thalesgroup.gemalto.d1.card.CardDigitizationState;
 import com.thalesgroup.gemalto.d1.card.CardMetadata;
 import com.thalesgroup.gemalto.d1.card.DigitalCard;
 import com.thalesgroup.gemalto.d1.card.OEMPayType;
-import com.thalesgroup.gemalto.d1.d1pay.AuthenticationParameter;
 import com.thalesgroup.gemalto.d1.d1pay.ContactlessTransactionListener;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayConfigParams;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDataChangedListener;

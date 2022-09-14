@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample;
 
 import android.app.ProgressDialog;
@@ -11,7 +15,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
-import com.thalesgroup.gemalto.d1.card.CardDataChangedListener;
 import com.thalesgroup.gemalto.d1.d1pay.AuthenticationParameter;
 import com.thalesgroup.gemalto.d1.d1pay.ContactlessTransactionListener;
 import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;

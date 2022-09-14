@@ -1,6 +1,8 @@
-package com.thalesgroup.mobile.d1sample.ui.login;
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
 
-import android.os.Looper;
+package com.thalesgroup.mobile.d1sample.ui.login;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
 import com.thalesgroup.gemalto.d1.D1Task;

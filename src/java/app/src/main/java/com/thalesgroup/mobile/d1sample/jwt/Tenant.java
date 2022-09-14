@@ -1,6 +1,8 @@
-package com.thalesgroup.mobile.d1sample.jwt;
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
 
-import android.renderscript.RSInvalidStateException;
+package com.thalesgroup.mobile.d1sample.jwt;
 
 import java.security.PrivateKey;
 

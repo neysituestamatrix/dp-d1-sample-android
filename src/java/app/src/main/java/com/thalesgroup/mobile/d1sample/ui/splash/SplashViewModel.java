@@ -1,21 +1,20 @@
+/*
+ * Copyright © 2022 THALES. All rights reserved.
+ */
+
 package com.thalesgroup.mobile.d1sample.ui.splash;
 
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
-import android.widget.Toast;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
 import com.thalesgroup.gemalto.d1.D1Task;
-import com.thalesgroup.gemalto.d1.card.CardDataChangedListener;
 import com.thalesgroup.gemalto.d1.d1pay.ContactlessTransactionListener;
-import com.thalesgroup.mobile.d1sample.MainActivity;
 import com.thalesgroup.mobile.d1sample.sdk.Configuration;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
 import com.thalesgroup.mobile.d1sample.ui.base.BaseViewModel;
-import com.thalesgroup.mobile.d1sample.ui.login.LoginFragment;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import androidx.annotation.NonNull;
