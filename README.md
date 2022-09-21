@@ -88,13 +88,13 @@ For more details, please refer to the [D1 SDK Setup](https://thales-dis-dbp.stop
 
 To receive access to all D1 services, the user needs to authenticate with D1. This authentication is done using a [JSON Web Token (JWT)](https://auth0.com/docs/secure/tokens/json-web-tokens). For simplicity this token is generated in the sample application. To generate the JWT the following configuration needs to be updated:
 
-**`app/src/main/java/com/thalesgroup/mobile/d1sample/jwt/Tenant.java`**
+**`app/src/main/java/com/thalesgroup/mobile/d1sample/sdk/Configuration.java`**
 ```java
 
 /**
- * Tenant configuration.
+ * D1 SDK configuration.
  */
-public class Tenant {
+public class Configuration {
 
     public static final Tenant SANDBOX = new Tenant("name",
                                                     "scope",
