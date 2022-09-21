@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'pmd'
     id 'com.google.gms.google-services'
 }
 
@@ -90,25 +89,4 @@ dependencies {
 
     releaseImplementation(name: 'd1-release', ext: 'aar')
     debugImplementation(name: 'd1-debug', ext: 'aar')
-}
-
-task pmd(type: Pmd) {
-    ruleSetFiles = files("${project.rootDir}/config/quality/pmd/ATT25075.ruleset")
-    ignoreFailures = false
-    ruleSets = []
-
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-
-    reports {
-        xml.enabled = false
-        html.enabled = true
-        xml {
-            destination file("$project.buildDir/reports/pmd/pmd.xml")
-        }
-        html {
-            destination file("$project.buildDir/reports/pmd/pmd.html")
-        }
-    }
 }
