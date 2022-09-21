@@ -136,6 +136,41 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
             }
         });
 
+        initModel();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showProgressDialog("Retrieving card information.");
+
+        mViewModel.getCardMetadata(mCardId);
+    }
+
+    /**
+     * Checks Tap&Pay settings - if application is set to be the default payment application.
+     */
+    private void checkTapAndPaySettings() {
+        final CardEmulation cardEmulation = CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(getActivity()));
+        final ComponentName componentName = new ComponentName(getActivity(), D1HCEService.class.getCanonicalName());
+        if (!cardEmulation.isDefaultServiceForCategory(componentName, CardEmulation.CATEGORY_PAYMENT)) {
+            // set application to be the default payment application
+            final Intent activate = new Intent();
+            activate.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activate.setAction(CardEmulation.ACTION_CHANGE_DEFAULT);
+            activate.putExtra(CardEmulation.EXTRA_SERVICE_COMPONENT, componentName);
+            activate.putExtra(CardEmulation.EXTRA_CATEGORY, CardEmulation.CATEGORY_PAYMENT);
+            getActivity().startActivity(activate);
+        }
+    }
+
+    /**
+     * Sets up observers for the ViewModel.
+     */
+    private void initModel() {
         mViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             hideProgressDialog();
             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
@@ -186,33 +221,5 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
 
         // mViewModel.isCardDigitized(mCardId);
         mViewModel.isCardDigitizedNfc(mCardId);
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        showProgressDialog("Retrieving card information.");
-
-        mViewModel.getCardMetadata(mCardId);
-    }
-
-    /**
-     * Checks Tap&Pay settings - if application is set to be the default payment application.
-     */
-    private void checkTapAndPaySettings() {
-        final CardEmulation cardEmulation = CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(getActivity()));
-        final ComponentName componentName = new ComponentName(getActivity(), D1HCEService.class.getCanonicalName());
-        if (!cardEmulation.isDefaultServiceForCategory(componentName, CardEmulation.CATEGORY_PAYMENT)) {
-            // set application to be the default payment application
-            final Intent activate = new Intent();
-            activate.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activate.setAction(CardEmulation.ACTION_CHANGE_DEFAULT);
-            activate.putExtra(CardEmulation.EXTRA_SERVICE_COMPONENT, componentName);
-            activate.putExtra(CardEmulation.EXTRA_CATEGORY, CardEmulation.CATEGORY_PAYMENT);
-            getActivity().startActivity(activate);
-        }
     }
 }

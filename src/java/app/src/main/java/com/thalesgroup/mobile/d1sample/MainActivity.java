@@ -181,11 +181,6 @@ public class MainActivity extends AppCompatActivity {
         final List<String> permissionsToCheck = new ArrayList<>();
         for (final String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PermissionChecker.PERMISSION_GRANTED) {
-                //noinspection StatementWithEmptyBody
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                    // Here we can display some description why we need this permission.
-                }
-
                 permissionsToCheck.add(permission);
             }
         }

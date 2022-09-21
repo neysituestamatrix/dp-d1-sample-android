@@ -533,13 +533,4 @@ public final class D1Helper {
             });
         });
     }
-
-    /**
-     * Helper method used for mocking the sdk responses.
-     *
-     * @param runnable Runnable to dispatch.
-     */
-    private void dispatchMock(@NonNull final Runnable runnable) {
-        new Handler().postDelayed(runnable, 1000);
-    }
 }
