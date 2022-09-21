@@ -46,13 +46,6 @@ public class Tenant {
         mJwtPrivateKey = jwtPrivateKey;
     }
 
-    public static final Tenant SANDBOX = new Tenant("name",
-                                                    "scope",
-                                                    "audience",
-                                                    "jwtKeyId",
-                                                    SignatureAlgorithm.ES256,
-                                                    "privateKey");
-
     /**
      * Retrieves the name.
      *

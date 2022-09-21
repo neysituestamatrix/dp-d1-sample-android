@@ -23,7 +23,7 @@ public class LoginViewModel extends BaseViewModel {
      */
     public void login() {
         // TODO: retrieve the access token
-        final String jwt = JWTEncoder.generateA2BAn(Tenant.SANDBOX, Configuration.CONSUMER_ID);
+        final String jwt = JWTEncoder.generateA2BAn(Configuration.SANDBOX, Configuration.CONSUMER_ID);
 
         D1Helper.getInstance().login(jwt.getBytes(StandardCharsets.UTF_8), new D1Task.Callback<Void>() {
             @Override

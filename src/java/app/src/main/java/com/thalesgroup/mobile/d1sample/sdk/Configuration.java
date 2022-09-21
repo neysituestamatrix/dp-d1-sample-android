@@ -4,6 +4,10 @@
 
 package com.thalesgroup.mobile.d1sample.sdk;
 
+import com.thalesgroup.mobile.d1sample.jwt.Tenant;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+
 /**
  * D1 SDK configuration.
  */
@@ -29,4 +33,12 @@ public class Configuration {
 
     // Card ID.
     public static final String CARD_ID = "";
+
+    // JWT configuration for authentication.
+    public static final Tenant SANDBOX = new Tenant("name",
+                                                    "scope",
+                                                    "audience",
+                                                    "jwtKeyId",
+                                                    SignatureAlgorithm.ES256,
+                                                    "privateKey");
 }
