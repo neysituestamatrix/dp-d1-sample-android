@@ -109,10 +109,20 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
             mIcon.setBackground(new BitmapDrawable(getResources(), bitmap));
         });
 
-        mViewModel.mIsDeleteCardSuccess.observe(getViewLifecycleOwner(), isDeleteSuccess -> {
+        mViewModel.mIsDeleteCardStartedSuccess.observe(getViewLifecycleOwner(), isDeleteSuccess -> {
+            hideProgressDialog();
+            if (isDeleteSuccess) {
+                // popFromBackstack();
+                Toast.makeText(getActivity(), "Delete card started OK.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Waiting for push message.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mViewModel.mIsDeleteCardFinishSuccess.observe(getViewLifecycleOwner(), isDeleteSuccess -> {
             hideProgressDialog();
             if (isDeleteSuccess) {
                 popFromBackstack();
+                Toast.makeText(getActivity(), "Card deleted OK.", Toast.LENGTH_SHORT).show();
             }
         });
 

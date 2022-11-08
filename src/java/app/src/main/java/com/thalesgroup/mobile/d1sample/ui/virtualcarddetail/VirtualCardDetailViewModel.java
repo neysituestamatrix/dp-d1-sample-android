@@ -213,14 +213,15 @@ public class VirtualCardDetailViewModel extends BaseViewModel {
                 switch (data) {
                     case NOT_DIGITIZED:
                         mEnableNFCPayment.postValue(true);
+                        mShowDigitalCard.postValue(false);
                         break;
                     case DIGITIZED:
-                        mShowDigitalCard.postValue(true);
-                        break;
                     case PENDING_IDV:
+                        mEnableNFCPayment.postValue(false);
                         mShowDigitalCard.postValue(true);
                         break;
                     case DIGITIZATION_IN_PROGRESS:
+                        mEnableNFCPayment.postValue(false);
                         mEnableNFCPayment.postValue(false);
                         break;
                     default:

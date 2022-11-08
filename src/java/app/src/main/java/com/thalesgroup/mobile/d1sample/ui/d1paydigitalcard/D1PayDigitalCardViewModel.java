@@ -26,11 +26,12 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
     public MutableLiveData<String> mLast4Pan = new MutableLiveData<>();
     public MutableLiveData<String> mExpr = new MutableLiveData<>();
     public MutableLiveData<String> mIsDefault = new MutableLiveData<>();
-    public MutableLiveData<Boolean> mIsDeleteCardSuccess = new MutableLiveData<>(Boolean.FALSE);
+    public MutableLiveData<Boolean> mIsDeleteCardStartedSuccess = new MutableLiveData<>(Boolean.FALSE);
     public MutableLiveData<Integer> mSuspendButtonVisibility = new MutableLiveData<>(View.GONE);
     public MutableLiveData<Integer> mResumeButtonVisibility = new MutableLiveData<>(View.GONE);
     public MutableLiveData<Integer> mSetDefaultButtonVisibility = new MutableLiveData<>(View.GONE);
     public MutableLiveData<Integer> mUnsetDefaultButtonVisibility = new MutableLiveData<>(View.GONE);
+    public MutableLiveData<Boolean> mIsDeleteCardFinishSuccess = new MutableLiveData<>(Boolean.FALSE);
 
     /**
      * Gets the D1Pay digital card details.
@@ -162,13 +163,20 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
      * @param cardId Card ID.
      */
     public void deleteD1PayDigitalCard(@NonNull final String cardId) {
+        D1Helper.getInstance().registerCardDataChangeListenerD1Pay((card, state) -> {
+            if (state == State.DELETED) {
+                mIsDeleteCardFinishSuccess.postValue(true);
+                D1Helper.getInstance().unregisterCardDataChangeListenerD1Pay();
+            }
+        });
+
         D1Helper.getInstance().getDigitalCardD1Pay(cardId, new D1Task.Callback<D1PayDigitalCard>() {
             @Override
             public void onSuccess(final D1PayDigitalCard digitalCard) {
                 D1Helper.getInstance().deleteD1PayDigitalCard(cardId, digitalCard, new D1Task.Callback<Boolean>() {
                     @Override
                     public void onSuccess(final Boolean aBoolean) {
-                        mIsDeleteCardSuccess.postValue(aBoolean);
+                        mIsDeleteCardStartedSuccess.postValue(aBoolean);
                     }
 
                     @Override
