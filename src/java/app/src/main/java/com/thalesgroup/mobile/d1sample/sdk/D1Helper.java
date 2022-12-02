@@ -144,36 +144,6 @@ public final class D1Helper {
     }
 
     /**
-     * Suspends the card.
-     *
-     * @param cardId   Card ID.
-     * @param callback Callback.
-     */
-    public void suspendCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().updateCard(cardId, CardAction.SUSPEND, "REASON", callback);
-    }
-
-    /**
-     * Resumes the card.
-     *
-     * @param cardId   Card ID.
-     * @param callback Callback.
-     */
-    public void resumeCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().updateCard(cardId, CardAction.RESUME, "REASON", callback);
-    }
-
-    /**
-     * Deletes the card.
-     *
-     * @param cardId   Card ID.
-     * @param callback Callback.
-     */
-    public void deleteCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().updateCard(cardId, CardAction.DELETE, "REASON", callback);
-    }
-
-    /**
      * Checks if card is digitized.
      *
      * @param cardId   Card ID.

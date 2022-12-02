@@ -97,21 +97,6 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
             mViewModel.hideCardDetails();
         });
 
-        view.findViewById(R.id.bt_suspend_card_details).setOnClickListener(v -> {
-            showProgressDialog("Operation in progress.");
-            mViewModel.suspendCard(mCardId);
-        });
-
-        view.findViewById(R.id.bt_resume_card_details).setOnClickListener(v -> {
-            showProgressDialog("Operation in progress.");
-            mViewModel.resumeCard(mCardId);
-        });
-
-        view.findViewById(R.id.bt_delete_card_details).setOnClickListener(v -> {
-            showProgressDialog("Operation in progress.");
-            mViewModel.deleteCard(mCardId);
-        });
-
         view.findViewById(R.id.bt_add_card).setOnClickListener(v -> {
             showProgressDialog("Card digitization.");
             mViewModel.digitizeCard(mCardId);

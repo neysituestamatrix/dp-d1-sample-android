@@ -124,30 +124,6 @@
                     android:text="Hide Card Details" />
 
                 <Button
-                    android:id="@+id/bt_suspend_card_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="Suspend Card"
-                    android:visibility="@{mViewModel.mSuspendButtonVisibility}" />
-
-                <Button
-                    android:id="@+id/bt_resume_card_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="Resume Card"
-                    android:visibility="@{mViewModel.mResumeButtonVisibility}" />
-
-                <Button
-                    android:id="@+id/bt_delete_card_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:enabled="false"
-                    android:text="Delete Card" />
-
-                <Button
                     android:id="@+id/bt_add_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

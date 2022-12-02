@@ -114,67 +114,6 @@ public class VirtualCardDetailViewModel extends BaseViewModel {
     }
 
     /**
-     * Suspends the card.
-     *
-     * @param cardId Card ID.
-     */
-    public void suspendCard(@NonNull final String cardId) {
-        D1Helper.getInstance().suspendCard(cardId, new D1Task.Callback<Void>() {
-            @Override
-            public void onSuccess(final Void data) {
-                // retrieve new card state
-                getCardMetadata(cardId);
-            }
-
-            @Override
-            public void onError(final D1Exception exception) {
-                mErrorMessage.postValue(exception.getLocalizedMessage());
-            }
-        });
-    }
-
-    /**
-     * Resumes the card.
-     *
-     * @param cardId Card ID.
-     */
-    public void resumeCard(@NonNull final String cardId) {
-        D1Helper.getInstance().resumeCard(cardId, new D1Task.Callback<Void>() {
-            @Override
-            public void onSuccess(final Void data) {
-                // retrieve new card state
-                getCardMetadata(cardId);
-            }
-
-            @Override
-            public void onError(final D1Exception exception) {
-                mErrorMessage.postValue(exception.getLocalizedMessage());
-            }
-        });
-    }
-
-    /**
-     * Deletes the card.
-     *
-     * @param cardId Card ID.
-     */
-    public void deleteCard(@NonNull final String cardId) {
-        D1Helper.getInstance().deleteCard(cardId, new D1Task.Callback<Void>() {
-            @Override
-            public void onSuccess(final Void data) {
-                mIsOperationSuccesfull.postValue(true);
-
-                mCardState.setValue(State.DELETED.toString());
-            }
-
-            @Override
-            public void onError(final D1Exception exception) {
-                mErrorMessage.postValue(exception.getLocalizedMessage());
-            }
-        });
-    }
-
-    /**
      * Checks if card is digitized.
      *
      * @param cardId Card ID.
