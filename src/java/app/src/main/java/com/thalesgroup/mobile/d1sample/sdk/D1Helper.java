@@ -48,6 +48,7 @@ public final class D1Helper {
     private static final D1Helper INSTANCE = new D1Helper();
 
     private D1Task mD1Task;
+    private Boolean mSdkIsConfigured = false;
 
     private D1Helper() {
         // private constructor
@@ -95,9 +96,23 @@ public final class D1Helper {
                                                               "Replenishment Subtitle",
                                                               "Replenishment Description",
                                                               "Cancel");
-        getCurrentPushToken();
 
-        mD1Task.configure(callback, coreConfig, cardConfig, d1PayConfigParams);
+        mD1Task.configure(new D1Task.ConfigCallback<Void>() {
+            @Override
+            public void onSuccess(final Void unused) {
+                synchronized (INSTANCE) {
+                    mSdkIsConfigured = true;
+                }
+
+                getCurrentPushToken();
+                callback.onSuccess(unused);
+            }
+
+            @Override
+            public void onError(@NonNull final List<D1Exception> list) {
+                callback.onError(list);
+            }
+        }, coreConfig, cardConfig, d1PayConfigParams);
     }
 
     /**
@@ -370,13 +385,15 @@ public final class D1Helper {
      * @param callback  Callback.
      */
     public void setPushToken(@NonNull final String pushToken, @NonNull final D1Task.Callback<Void> callback) {
-        if (mD1Task != null) {
-            // SDK already configured.
-            mD1Task.updatePushToken(pushToken, callback);
-        } else {
-            // SDK not yet configured.
-            // Notify callback to not block the flow.
-            callback.onSuccess(null);
+        synchronized (INSTANCE) {
+            if (mSdkIsConfigured) {
+                // SDK already configured.
+                mD1Task.updatePushToken(pushToken, callback);
+            } else {
+                // SDK not yet configured.
+                // Notify callback to not block the flow.
+                callback.onSuccess(null);
+            }
         }
     }
 
@@ -399,12 +416,14 @@ public final class D1Helper {
      */
     public void processPushMessage(@NonNull final RemoteMessage remoteMessage,
                                    @NonNull final D1Task.Callback<String> callback) {
-        if (mD1Task != null) {
-            // SDK already configured
-            mD1Task.processPushMessage(remoteMessage.getData(), callback);
-        } else {
-            // notify to not block the flow
-            callback.onSuccess(null);
+        synchronized (INSTANCE) {
+            if (mSdkIsConfigured) {
+                // SDK already configured
+                mD1Task.processPushMessage(remoteMessage.getData(), callback);
+            } else {
+                // notify to not block the flow
+                callback.onSuccess(null);
+            }
         }
     }
 
