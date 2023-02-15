@@ -124,7 +124,25 @@ To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/bran
 
 ##### Android keystore
 
-To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/0a7cb56c00838-d1-pay) services, the sample application needs to be signed with a specific keystore. 
+To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/0a7cb56c00838-d1-pay) services, the sample application needs to be signed with a specific keystore - [Mobile banking application signing key](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/4723a96dffe6e-onboarding#mobile-banking-application-signing-key). The sample application needs to be updated with the appropriate keystore and signing configuration.
+
+**`app/build.gradle`**
+```groovy
+signingConfigs {
+    debug {
+        storeFile file('keystore/keystore')
+        storePassword ''
+        keyAlias ''
+        keyPassword ''
+    }
+    release {
+        storeFile file('keystore/keystore')
+        storePassword ''
+        keyAlias ''
+        keyPassword ''
+    }
+}
+```
 
 ##### D1Pay backend configuration
 
