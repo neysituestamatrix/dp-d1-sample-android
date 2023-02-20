@@ -4,7 +4,6 @@
 
 package com.thalesgroup.mobile.d1sample.ui.splash;
 
-import android.app.Notification;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.mobile.d1sample.MainActivity;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
 import com.thalesgroup.mobile.d1sample.ui.login.LoginFragment;
-import com.thalesgroup.mobile.d1sample.util.NotificationUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,15 +58,10 @@ public class SplashFragment extends AbstractBaseFragment<SplashViewModel> {
         super.onResume();
 
         showProgressDialog("Initializing.");
-        final Notification notification = NotificationUtil.getNotification(getActivity().getApplicationContext(),
-                                                                           "This notification is posted to run internal "
-                                                                           + "operation of mg sdk",
-                                                                           "SDK_NOTIFICATION");
 
         mViewModel.configure(getActivity().getApplicationContext(),
                              getActivity(),
-                             ((MainActivity) getActivity()).getContactlessTransactionListener(),
-                             notification);
+                             ((MainActivity) getActivity()).getContactlessTransactionListener());
     }
 
     /**

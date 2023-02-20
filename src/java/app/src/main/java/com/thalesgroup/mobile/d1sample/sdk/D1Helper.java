@@ -5,10 +5,8 @@
 package com.thalesgroup.mobile.d1sample.sdk;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
@@ -19,6 +17,7 @@ import com.thalesgroup.gemalto.d1.D1Params;
 import com.thalesgroup.gemalto.d1.D1Task;
 import com.thalesgroup.gemalto.d1.EntryUI;
 import com.thalesgroup.gemalto.d1.PINDisplayTextView;
+import com.thalesgroup.gemalto.d1.PushResponseKey;
 import com.thalesgroup.gemalto.d1.SecureEditText;
 import com.thalesgroup.gemalto.d1.card.CardAction;
 import com.thalesgroup.gemalto.d1.card.CardActivationMethod;
@@ -33,6 +32,7 @@ import com.thalesgroup.gemalto.d1.d1pay.D1PayConfigParams;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDataChangedListener;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDigitalCard;
 import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
+import com.thalesgroup.gemalto.d1.d1pay.TransactionHistory;
 import com.thalesgroup.mobile.d1sample.util.HexUtil;
 
 import java.util.List;
@@ -76,7 +76,6 @@ public final class D1Helper {
                           @NonNull final Activity activity,
                           @NonNull final Context applicationContext,
                           @NonNull final ContactlessTransactionListener contactlessTransactionListener,
-                          @NonNull final Notification notification,
                           @NonNull final D1Task.ConfigCallback<Void> callback) {
         // D1Core config.
         mD1Task = new D1Task.Builder().setContext(applicationContext).setD1ServiceURL(Configuration.D1_SERVICE_URL)
@@ -91,7 +90,6 @@ public final class D1Helper {
         // D1Pay config.
         final D1PayConfigParams d1PayConfigParams = D1PayConfigParams.getInstance();
         d1PayConfigParams.setContactlessTransactionListener(contactlessTransactionListener);
-        d1PayConfigParams.setNotification(notification);
         d1PayConfigParams.setReplenishAuthenticationUIStrings("Replenishment Title",
                                                               "Replenishment Subtitle",
                                                               "Replenishment Description",
@@ -415,11 +413,11 @@ public final class D1Helper {
      * @param callback      Callback.
      */
     public void processPushMessage(@NonNull final RemoteMessage remoteMessage,
-                                   @NonNull final D1Task.Callback<String> callback) {
+                                   @NonNull final D1Task.Callback<Map<PushResponseKey, String>> callback) {
         synchronized (INSTANCE) {
             if (mSdkIsConfigured) {
                 // SDK already configured
-                mD1Task.processPushMessage(remoteMessage.getData(), callback);
+                mD1Task.processNotification(remoteMessage.getData(), callback);
             } else {
                 // notify to not block the flow
                 callback.onSuccess(null);
@@ -482,6 +480,17 @@ public final class D1Helper {
      */
     public String getLibVersions() {
         return D1Task.getSDKVersions().toString();
+    }
+
+    /**
+     * Retrieves the transaction history.
+     *
+     * @param cardId   Card ID.
+     * @param callback Callback.
+     */
+    public void getD1PayTransactionHistory(@NonNull final String cardId,
+                                           @NonNull final D1Task.Callback<TransactionHistory> callback) {
+        getD1Task().getD1PayWallet().getTransactionHistory(cardId, callback);
     }
 
     /**
