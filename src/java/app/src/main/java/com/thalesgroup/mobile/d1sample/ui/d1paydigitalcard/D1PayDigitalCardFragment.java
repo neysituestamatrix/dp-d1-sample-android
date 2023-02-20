@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.gemalto.d1.validation.databinding.FragmentD1payDigitalCardDetailBinding;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
+import com.thalesgroup.mobile.d1sample.ui.d1paytransactioinhistory.D1PayTransactionHistoryFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -91,6 +92,8 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
             showProgressDialog("Operation in progress.");
             mViewModel.unSetDefaultCard(mCardId);
         });
+
+        view.findViewById(R.id.bt_transaction_history_d1pay_card).setOnClickListener(view1 -> showFragment(D1PayTransactionHistoryFragment.newInstance(mCardId), true));
 
         mViewModel.getIsOperationSuccesfull().observe(getViewLifecycleOwner(), isLogoutSuccessful -> {
             hideProgressDialog();

@@ -24,8 +24,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Suspend Card"
-                    android:visibility="@{mViewModel.mSuspendButtonVisibility}"
-                    app:layout_constraintTop_toBottomOf="@id/bt_hide_card_details" />
+                    android:visibility="@{mViewModel.mSuspendButtonVisibility}"/>
 
                 <Button
                     android:id="@+id/bt_resume_d1pay_card_details"
@@ -33,16 +32,14 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="Resume Card"
-                    android:visibility="@{mViewModel.mResumeButtonVisibility}"
-                    app:layout_constraintTop_toBottomOf="@id/bt_suspend_card_details" />
+                    android:visibility="@{mViewModel.mResumeButtonVisibility}"/>
 
                 <Button
                     android:id="@+id/bt_delete_d1pay_card_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="Delete Card"
-                    app:layout_constraintTop_toBottomOf="@id/bt_resume_card_details" />
+                    android:text="Delete Card"/>
 
                 <Button
                     android:id="@+id/bt_set_default_d1pay_card"
@@ -50,8 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:visibility="@{mViewModel.mSetDefaultButtonVisibility}"
-                    android:text="Set as default card"
-                    app:layout_constraintTop_toBottomOf="@id/bt_resume_card_details" />
+                    android:text="Set as default card"/>
 
                 <Button
                     android:id="@+id/bt_un_set_default_d1pay_card"
@@ -59,8 +55,14 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:visibility="@{mViewModel.mUnsetDefaultButtonVisibility}"
-                    android:text="Unset as default card"
-                    app:layout_constraintTop_toBottomOf="@id/bt_resume_card_details" />
+                    android:text="Unset as default card"/>
+
+                <Button
+                    android:id="@+id/bt_transaction_history_d1pay_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Transaction History"/>
 
             </LinearLayout>
         </ScrollView>
