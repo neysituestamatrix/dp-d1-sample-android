@@ -4,7 +4,9 @@
 
 package com.thalesgroup.mobile.d1sample.fcm;
 
-import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -18,11 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class D1PayFirebaseService extends FirebaseMessagingService {
-    public static final String NOTIFY_UI_REQUEST = "NOTIFY_UI_REQUEST";
-    public static final String NOTIFY_UI_MESSAGE = "NOTIFY_UI_MESSAGE";
 
     @Override
     public void onMessageReceived(@NonNull final RemoteMessage message) {
@@ -82,12 +81,8 @@ public class D1PayFirebaseService extends FirebaseMessagingService {
      * @param message Message.
      */
     private void notifyUI(@NonNull final String message) {
-        final LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getBaseContext());
-
-        final Intent intent = new Intent();
-        intent.setAction(NOTIFY_UI_REQUEST);
-        intent.putExtra(NOTIFY_UI_MESSAGE, message);
-        localBroadcastManager.sendBroadcast(intent);
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     private final DeviceAuthenticationCallback mDeviceAuthenticationCallback = new DeviceAuthenticationCallback() {

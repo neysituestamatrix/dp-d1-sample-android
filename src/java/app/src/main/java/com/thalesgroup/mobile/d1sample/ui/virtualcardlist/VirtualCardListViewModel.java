@@ -23,7 +23,7 @@ public class VirtualCardListViewModel extends AbstractCardListViewModel {
      */
     public void retrieveCardIds() {
         final List<String> virtualCardList = new ArrayList<>();
-        virtualCardList.add(Configuration.CARD_ID);
+        virtualCardList.add(Configuration.cardId);
         mCardIds.postValue(virtualCardList);
     }
 

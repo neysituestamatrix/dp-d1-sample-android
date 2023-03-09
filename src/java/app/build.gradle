@@ -11,24 +11,25 @@ android {
         applicationId "com.thalesgroup.gemalto.d1.validation"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 8
-        versionName "1.5.0"
+        versionCode 9
+        versionName "1.6.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
-        debug {
-            storeFile file('keystore/keystore')
-            storePassword ''
-            keyAlias ''
-            keyPassword ''
-        }
-        release {
-            storeFile file('keystore/keystore')
-            storePassword ''
-            keyAlias ''
-            keyPassword ''
+        signingD1Pay {
+            // Load keystore
+            def keystorePropertiesFile = rootProject.file("app/src/main/assets/keystore.properties");
+            def keystoreProperties = new Properties()
+            if (keystorePropertiesFile.canRead()) {
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
 
@@ -39,18 +40,31 @@ android {
         }
     }
 
+    flavorDimensions "version"
+    productFlavors {
+        virtualCard {
+            dimension "version"
+        }
+        d1Pay {
+            dimension "version"
+        }
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            productFlavors.d1Pay.signingConfig signingConfigs.signingD1Pay
+            productFlavors.virtualCard.signingConfig signingConfig
+            signingConfig null
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            productFlavors.d1Pay.signingConfig signingConfigs.signingD1Pay
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

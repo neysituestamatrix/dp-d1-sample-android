@@ -27,12 +27,12 @@ import com.thalesgroup.gemalto.d1.card.CardDigitizationState;
 import com.thalesgroup.gemalto.d1.card.CardMetadata;
 import com.thalesgroup.gemalto.d1.card.DigitalCard;
 import com.thalesgroup.gemalto.d1.card.OEMPayType;
-import com.thalesgroup.gemalto.d1.d1pay.ContactlessTransactionListener;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayConfigParams;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDataChangedListener;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDigitalCard;
 import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
 import com.thalesgroup.gemalto.d1.d1pay.TransactionHistory;
+import com.thalesgroup.mobile.d1sample.sdk.payment.D1PayTransactionListener;
 import com.thalesgroup.mobile.d1sample.util.HexUtil;
 
 import java.util.List;
@@ -40,6 +40,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
 
 /**
  * Helper class for D1 SDK.
@@ -47,8 +48,12 @@ import androidx.annotation.Nullable;
 public final class D1Helper {
     private static final D1Helper INSTANCE = new D1Helper();
 
+    private final MutableLiveData<SdkConfigState> mSdkConfigurationState = new MutableLiveData(SdkConfigState.NOT_CONFIGURED);
+    private final MutableLiveData<SdkConfigState> mPaySdkConfigurationState = new MutableLiveData(SdkConfigState.NOT_CONFIGURED);
+
     private D1Task mD1Task;
-    private Boolean mSdkIsConfigured = false;
+    private D1Task mD1PayTask;
+    private D1PayTransactionListener mD1PayTransactionListener;
 
     private D1Helper() {
         // private constructor
@@ -67,50 +72,97 @@ public final class D1Helper {
     /**
      * Configures the D1 SDK.
      *
-     * @param consumerId         Consumer ID.
-     * @param activity           Activity.
-     * @param applicationContext Application context.
-     * @param callback           Callback.
+     * @param consumerId Consumer ID.
+     * @param activity   Activity.
+     * @param callback   Callback.
      */
     public void configure(@NonNull final String consumerId,
                           @NonNull final Activity activity,
-                          @NonNull final Context applicationContext,
-                          @NonNull final ContactlessTransactionListener contactlessTransactionListener,
                           @NonNull final D1Task.ConfigCallback<Void> callback) {
         // D1Core config.
-        mD1Task = new D1Task.Builder().setContext(applicationContext).setD1ServiceURL(Configuration.D1_SERVICE_URL)
-                                      .setIssuerID(Configuration.ISSUER_ID)
-                                      .setD1ServiceRSAExponent(HexUtil.hexStringToByteArray(Configuration.D1_SERVICE_RSA_EXPONENT))
-                                      .setD1ServiceRSAModulus(HexUtil.hexStringToByteArray(Configuration.D1_SERVICE_RSA_MODULUS))
-                                      .setDigitalCardURL(Configuration.DIGITAL_CARD_URL).build();
+        mD1Task = new D1Task.Builder().setContext(activity.getApplicationContext()).setD1ServiceURL(Configuration.d1ServiceUrl)
+                .setIssuerID(Configuration.issuerId)
+                .setD1ServiceRSAExponent(HexUtil.hexStringToByteArray(Configuration.d1ServiceRsaExponent))
+                .setD1ServiceRSAModulus(HexUtil.hexStringToByteArray(Configuration.d1ServiceRsaModulus))
+                .setDigitalCardURL(Configuration.digitalCardUrl).build();
 
         final D1Params coreConfig = ConfigParams.buildConfigCore(consumerId);
         final D1Params cardConfig = ConfigParams.buildConfigCard(activity, OEMPayType.GOOGLE_PAY, null);
 
-        // D1Pay config.
-        final D1PayConfigParams d1PayConfigParams = D1PayConfigParams.getInstance();
-        d1PayConfigParams.setContactlessTransactionListener(contactlessTransactionListener);
-        d1PayConfigParams.setReplenishAuthenticationUIStrings("Replenishment Title",
-                                                              "Replenishment Subtitle",
-                                                              "Replenishment Description",
-                                                              "Cancel");
+        final D1Params[] d1Params = new D1Params[]{coreConfig, cardConfig};
+
+        mSdkConfigurationState.postValue(SdkConfigState.WORKING);
 
         mD1Task.configure(new D1Task.ConfigCallback<Void>() {
             @Override
             public void onSuccess(final Void unused) {
                 synchronized (INSTANCE) {
-                    mSdkIsConfigured = true;
+                    mSdkConfigurationState.postValue(SdkConfigState.CONFIGURED);
                 }
 
-                getCurrentPushToken();
                 callback.onSuccess(unused);
             }
 
             @Override
             public void onError(@NonNull final List<D1Exception> list) {
+                mSdkConfigurationState.postValue(SdkConfigState.ERROR);
+
                 callback.onError(list);
             }
-        }, coreConfig, cardConfig, d1PayConfigParams);
+        }, d1Params);
+    }
+
+    /**
+     * Configures the D1 SDK.
+     *
+     * @param applicationContext Application context.
+     * @param callback           Callback.
+     */
+    public void configureD1Pay(@NonNull final String consumerId,
+                               @NonNull final Context applicationContext,
+                               @NonNull final D1Task.ConfigCallback<Void> callback) {
+        // D1Core config.
+        mD1PayTask = new D1Task.Builder().setContext(applicationContext).setD1ServiceURL(Configuration.d1ServiceUrl)
+                .setIssuerID(Configuration.issuerId)
+                .setD1ServiceRSAExponent(HexUtil.hexStringToByteArray(Configuration.d1ServiceRsaExponent))
+                .setD1ServiceRSAModulus(HexUtil.hexStringToByteArray(Configuration.d1ServiceRsaModulus))
+                .setDigitalCardURL(Configuration.digitalCardUrl).build();
+
+
+        final D1Params coreConfig = ConfigParams.buildConfigCore(consumerId);
+
+        // D1Pay config.
+        final D1PayConfigParams d1PayConfigParams = D1PayConfigParams.getInstance();
+        d1PayConfigParams.setContactlessTransactionListener(mD1PayTransactionListener = new D1PayTransactionListener(applicationContext));
+        d1PayConfigParams.setReplenishAuthenticationUIStrings("Replenishment Title",
+                "Replenishment Subtitle",
+                "Replenishment Description",
+                "Cancel");
+        final D1Params[] d1Params = new D1Params[]{coreConfig, d1PayConfigParams};
+
+
+        mPaySdkConfigurationState.postValue(SdkConfigState.WORKING);
+
+        mD1PayTask.configure(new D1Task.ConfigCallback<Void>() {
+            @Override
+            public void onSuccess(final Void unused) {
+                synchronized (INSTANCE) {
+                    mPaySdkConfigurationState.postValue(SdkConfigState.CONFIGURED);
+                }
+
+                getCurrentPushToken();
+
+
+                callback.onSuccess(unused);
+            }
+
+            @Override
+            public void onError(@NonNull final List<D1Exception> list) {
+                mPaySdkConfigurationState.postValue(SdkConfigState.ERROR);
+
+                callback.onError(list);
+            }
+        }, d1Params);
     }
 
     /**
@@ -144,6 +196,17 @@ public final class D1Helper {
      */
     public void getCardMetadata(@NonNull final String cardId, @NonNull final D1Task.Callback<CardMetadata> callback) {
         getD1Task().getCardMetadata(cardId, callback);
+    }
+
+
+    /**
+     * Retrieves the card meta data.
+     *
+     * @param cardId   Card ID.
+     * @param callback Callback.
+     */
+    public void getD1PayCardMetadata(@NonNull final String cardId, @NonNull final D1Task.Callback<CardMetadata> callback) {
+        getD1PayTask().getCardMetadata(cardId, callback);
     }
 
     /**
@@ -261,7 +324,7 @@ public final class D1Helper {
     public void getDigitalCardListD1Pay(@NonNull final D1Task.Callback<Map<String, D1PayDigitalCard>> callback) {
         // TODO: workaround for synchronous API - should be fixed in the future
         new Thread(() -> {
-            getD1Task().getD1PayWallet().getDigitalCardList(callback);
+            getD1PayTask().getD1PayWallet().getDigitalCardList(callback);
         }).start();
     }
 
@@ -275,7 +338,7 @@ public final class D1Helper {
                                     @NonNull final D1Task.Callback<D1PayDigitalCard> callback) {
         // TODO: workaround for synchronous API - should be fixed in the future
         new Thread(() -> {
-            getD1Task().getD1PayWallet().getDigitalCard(cardId, callback);
+            getD1PayTask().getD1PayWallet().getDigitalCard(cardId, callback);
         }).start();
     }
 
@@ -289,7 +352,7 @@ public final class D1Helper {
     public void resumeD1PayDigitalCard(@NonNull final String cardId,
                                        @NonNull final D1PayDigitalCard digitalCard,
                                        @NonNull final D1Task.Callback<Boolean> callback) {
-        getD1Task().getD1PayWallet().updateDigitalCard(cardId, digitalCard, CardAction.RESUME, callback);
+        getD1PayTask().getD1PayWallet().updateDigitalCard(cardId, digitalCard, CardAction.RESUME, callback);
     }
 
     /**
@@ -302,7 +365,7 @@ public final class D1Helper {
     public void suspendD1PayDigitalCard(@NonNull final String cardId,
                                         @NonNull final D1PayDigitalCard digitalCard,
                                         @NonNull final D1Task.Callback<Boolean> callback) {
-        getD1Task().getD1PayWallet().updateDigitalCard(cardId, digitalCard, CardAction.SUSPEND, callback);
+        getD1PayTask().getD1PayWallet().updateDigitalCard(cardId, digitalCard, CardAction.SUSPEND, callback);
     }
 
     /**
@@ -315,7 +378,7 @@ public final class D1Helper {
     public void deleteD1PayDigitalCard(@NonNull final String cardId,
                                        @NonNull final D1PayDigitalCard digitalCard,
                                        @NonNull final D1Task.Callback<Boolean> callback) {
-        getD1Task().getD1PayWallet().updateDigitalCard(cardId, digitalCard, CardAction.DELETE, callback);
+        getD1PayTask().getD1PayWallet().updateDigitalCard(cardId, digitalCard, CardAction.DELETE, callback);
     }
 
     /**
@@ -325,7 +388,7 @@ public final class D1Helper {
      * @param callback Callback.
      */
     public void setDefaultD1PayDigitalCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().getD1PayWallet().setDefaultPaymentDigitalCard(cardId, callback);
+        getD1PayTask().getD1PayWallet().setDefaultPaymentDigitalCard(cardId, callback);
     }
 
     /**
@@ -334,7 +397,7 @@ public final class D1Helper {
      * @param callback Callback.
      */
     public void unsetDefaultD1PayDigitalCard(@NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().getD1PayWallet().unsetDefaultPaymentDigitalCard(callback);
+        getD1PayTask().getD1PayWallet().unsetDefaultPaymentDigitalCard(callback);
     }
 
     /**
@@ -384,9 +447,9 @@ public final class D1Helper {
      */
     public void setPushToken(@NonNull final String pushToken, @NonNull final D1Task.Callback<Void> callback) {
         synchronized (INSTANCE) {
-            if (mSdkIsConfigured) {
+            if (mPaySdkConfigurationState.getValue() == SdkConfigState.CONFIGURED) {
                 // SDK already configured.
-                mD1Task.updatePushToken(pushToken, callback);
+                getD1PayTask().updatePushToken(pushToken, callback);
             } else {
                 // SDK not yet configured.
                 // Notify callback to not block the flow.
@@ -403,7 +466,7 @@ public final class D1Helper {
      */
     public void getD1PayDigitizationState(@NonNull final String cardId,
                                           @NonNull final D1Task.Callback<CardDigitizationState> callback) {
-        getD1Task().getD1PayWallet().getCardDigitizationState(cardId, callback);
+        getD1PayTask().getD1PayWallet().getCardDigitizationState(cardId, callback);
     }
 
     /**
@@ -415,9 +478,9 @@ public final class D1Helper {
     public void processPushMessage(@NonNull final RemoteMessage remoteMessage,
                                    @NonNull final D1Task.Callback<Map<PushResponseKey, String>> callback) {
         synchronized (INSTANCE) {
-            if (mSdkIsConfigured) {
+            if (mPaySdkConfigurationState.getValue() == SdkConfigState.CONFIGURED) {
                 // SDK already configured
-                mD1Task.processNotification(remoteMessage.getData(), callback);
+                getD1PayTask().processNotification(remoteMessage.getData(), callback);
             } else {
                 // notify to not block the flow
                 callback.onSuccess(null);
@@ -447,14 +510,14 @@ public final class D1Helper {
      * @param cardDataChangedListener CardDataChangedListener.
      */
     public void registerCardDataChangeListenerD1Pay(@NonNull final D1PayDataChangedListener cardDataChangedListener) {
-        getD1Task().getD1PayWallet().registerD1PayDataChangedListener(cardDataChangedListener);
+        getD1PayTask().getD1PayWallet().registerD1PayDataChangedListener(cardDataChangedListener);
     }
 
     /**
      * Unregisters the CardDataChangedListener - D1Pay.
      */
     public void unregisterCardDataChangeListenerD1Pay() {
-        getD1Task().getD1PayWallet().unRegisterD1PayDataChangedListener();
+        getD1PayTask().getD1PayWallet().unRegisterD1PayDataChangedListener();
     }
 
     /**
@@ -464,13 +527,13 @@ public final class D1Helper {
      * @param callback Callback.
      */
     public void digitizeD1PayCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().getD1PayWallet().addDigitalCard(cardId, callback);
+        getD1PayTask().getD1PayWallet().addDigitalCard(cardId, callback);
     }
 
     public void replenish(@NonNull final String cardId,
                           @NonNull final DeviceAuthenticationCallback deviceAuthenticationCallback,
                           @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().getD1PayWallet().replenish(cardId, true, deviceAuthenticationCallback, callback);
+        getD1PayTask().getD1PayWallet().replenish(cardId, true, deviceAuthenticationCallback, callback);
     }
 
     /**
@@ -490,7 +553,43 @@ public final class D1Helper {
      */
     public void getD1PayTransactionHistory(@NonNull final String cardId,
                                            @NonNull final D1Task.Callback<TransactionHistory> callback) {
-        getD1Task().getD1PayWallet().getTransactionHistory(cardId, callback);
+        getD1PayTask().getD1PayWallet().getTransactionHistory(cardId, callback);
+    }
+
+
+    /**
+     * Sets the current push token to D1 SDK.
+     */
+    private void getCurrentPushToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                return;
+            }
+
+            // Get new FCM registration token
+            final String token = task.getResult();
+            getD1PayTask().updatePushToken(token, new D1Task.Callback<Void>() {
+                @Override
+                public void onSuccess(final Void data) {
+                    // nothing to do
+                }
+
+                @Override
+                public void onError(@NonNull final D1Exception exception) {
+                    // ignore error
+                }
+            });
+        });
+    }
+
+    /**
+     * Retrieves the {@code D1PayTransactionListener} instance.
+     *
+     * @return {@code D1PayTransactionListener} instance.
+     */
+    @Nullable
+    public D1PayTransactionListener getD1PayTransactionListener() {
+        return mD1PayTransactionListener;
     }
 
     /**
@@ -508,27 +607,24 @@ public final class D1Helper {
     }
 
     /**
-     * Sets the current push token to D1 SDK.
+     * Retrieves the {@code D1Task} instance.
+     *
+     * @return {@code D1Task} instance.
      */
-    private void getCurrentPushToken() {
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                return;
-            }
+    @NonNull
+    private D1Task getD1PayTask() {
+        if (mD1PayTask == null) {
+            throw new IllegalStateException("Need to configure D1 Pay SDK first.");
+        }
 
-            // Get new FCM registration token
-            final String token = task.getResult();
-            mD1Task.updatePushToken(token, new D1Task.Callback<Void>() {
-                @Override
-                public void onSuccess(final Void data) {
-                    // nothing to do
-                }
+        return mD1PayTask;
+    }
 
-                @Override
-                public void onError(@NonNull final D1Exception exception) {
-                    // ignore error
-                }
-            });
-        });
+
+    enum SdkConfigState {
+        NOT_CONFIGURED,
+        WORKING,
+        CONFIGURED,
+        ERROR
     }
 }

@@ -5,13 +5,11 @@
 package com.thalesgroup.mobile.d1sample;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
@@ -22,7 +20,6 @@ import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationTimeoutCallback;
 import com.thalesgroup.gemalto.d1.d1pay.TransactionData;
 import com.thalesgroup.gemalto.d1.d1pay.VerificationMethod;
 import com.thalesgroup.gemalto.d1.validation.R;
-import com.thalesgroup.mobile.d1sample.fcm.D1PayFirebaseService;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
 import com.thalesgroup.mobile.d1sample.ui.splash.SplashFragment;
 
@@ -38,22 +35,14 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class MainActivity extends AppCompatActivity {
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            final String message = intent.getStringExtra(D1PayFirebaseService.NOTIFY_UI_MESSAGE);
-            Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-        }
-    };
-
     private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Main activity", "Launching");
         setContentView(R.layout.main_activity);
 
         if (checkMandatoryPermissions()) {
@@ -84,21 +73,6 @@ public class MainActivity extends AppCompatActivity {
         showFragment(SplashFragment.newInstance(), false);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        LocalBroadcastManager.getInstance(this)
-                             .registerReceiver(mBroadcastReceiver, new IntentFilter(D1PayFirebaseService.NOTIFY_UI_REQUEST));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
-    }
-
     /**
      * Shows a new Fragment.
      *
@@ -107,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void showFragment(final Fragment fragment, final boolean addToBackstack) {
         final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
-                                                                                   .replace(R.id.container, fragment);
+                .replace(R.id.container, fragment);
         if (addToBackstack) {
             fragmentTransaction.addToBackStack(null);
         }
@@ -122,14 +96,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().popBackStack();
     }
 
-    /**
-     * Gets the ContactlessTransactionListener.
-     *
-     * @return ContactlessTransactionListener.
-     */
-    public ContactlessTransactionListener getContactlessTransactionListener() {
-        return mContactlessTransactionListener;
-    }
 
     /**
      * Shows a progress dialog.
@@ -194,115 +160,5 @@ public class MainActivity extends AppCompatActivity {
         return permissionsToCheck.isEmpty();
     }
 
-    /**
-     * Listener for device authentication events - triggered when user needs to authenticate.
-     */
-    private final DeviceAuthenticationCallback mDeviceAuthenticationCallback = new DeviceAuthenticationCallback() {
-        @Override
-        public void onSuccess() {
-            // User authentication was successful
-            // payment process will continue to the next stage: onReadyToTap()
-        }
 
-        @Override
-        public void onFailed() {
-            // User authentication failed, the mobile app may ask end user to retry
-            Toast.makeText(MainActivity.this, "Authentication failed", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onError(final int fpErrorCode) {
-            // For BIOMETRIC only
-            // Error happened while doing BIOMETRIC authentication (for example, using wrong finger too many times and the
-            // sensor is locked)
-            // Base on the fpErrorCode, the mobile application should troubleshoot the end user.
-        }
-
-        @Override
-        public void onHelp(final int fpCode, @NonNull final CharSequence detail) {
-            // For BIOMETRIC only
-            // Mobile application may show the fpDetail message to the end user
-        }
-    };
-
-    /**
-     * Listener for transaction events - triggered during payment events.
-     */
-    private final ContactlessTransactionListener mContactlessTransactionListener = new ContactlessTransactionListener() {
-        @Override
-        public void onTransactionStarted() {
-            // Display transaction is ongoing
-            Toast.makeText(MainActivity.this, "Transaction started", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onAuthenticationRequired(@NonNull final VerificationMethod method) {
-            // Only applicable for 2-TAP experience
-            // Display transaction details and tell consumer to authenticate
-            final TransactionData transactionData = this.getTransactionData();
-            final double amount = transactionData != null ? transactionData.getAmount() : -1;
-            final AuthenticationParameter authenticationParameter = new AuthenticationParameter(MainActivity.this,
-                                                                                                "Authentication required",
-                                                                                                "Subtitle",
-                                                                                                String.format(Locale.ENGLISH,
-                                                                                                              "Amount: %f",
-                                                                                                              amount),
-                                                                                                "Cancel",
-                                                                                                mDeviceAuthenticationCallback);
-
-            this.startAuthenticate(authenticationParameter);
-            if (transactionData != null) {
-                transactionData.wipe();
-            }
-        }
-
-        @Override
-        public void onReadyToTap() {
-            // Only applicable for 2-TAP experience
-            // Inform customer application is ready for 2nd TAP.
-            // Display transaction details and display the remaining time for the 2nd TAP
-            final TransactionData transactionData = this.getTransactionData();
-            final double amount = transactionData != null ? transactionData.getAmount() : -1;
-            Toast.makeText(MainActivity.this,
-                           String.format(Locale.ENGLISH, "Perform 2nd tap for amount: %f", amount),
-                           Toast.LENGTH_LONG).show();
-            if (transactionData != null) {
-                transactionData.wipe();
-            }
-
-            // Register the timeout callback to update the user on remaining time for the 2nd tap.
-            this.registerDeviceAuthTimeoutCallback(new DeviceAuthenticationTimeoutCallback() {
-                @Override
-                public void onTimer(final int remain) {
-                    // The mobile application should update the countdown screen with current "remaining" time.
-                }
-
-                @Override
-                public void onTimeout() {
-                    // The mobile application should inform end user of the timeout error.
-                }
-            });
-        }
-
-        @Override
-        public void onTransactionCompleted() {
-            // The transaction has been completed successfully on the mobile app.
-            // Display transaction status success and details
-            final TransactionData transactionData = this.getTransactionData();
-            final double amount = transactionData != null ? transactionData.getAmount() : -1;
-            Toast.makeText(MainActivity.this,
-                           String.format(Locale.ENGLISH, "Payment completed: %f", amount),
-                           Toast.LENGTH_LONG).show();
-            if (transactionData != null) {
-                transactionData.wipe();
-            }
-        }
-
-        @Override
-        public void onError(@NonNull final D1Exception error) {
-            // The transaction failed due to an error.
-            // Mobile application should get detailed information from the "error" param and inform the end user.
-            Toast.makeText(MainActivity.this, error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
 }

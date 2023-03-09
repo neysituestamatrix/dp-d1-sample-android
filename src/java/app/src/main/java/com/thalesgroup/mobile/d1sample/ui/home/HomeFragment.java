@@ -13,11 +13,13 @@ import android.widget.Toast;
 
 import com.thalesgroup.gemalto.d1.validation.BuildConfig;
 import com.thalesgroup.gemalto.d1.validation.R;
+import com.thalesgroup.mobile.d1sample.MainActivity;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
 import com.thalesgroup.mobile.d1sample.ui.d1paydigitalcardlist.D1PayDigitalCardListFragment;
 import com.thalesgroup.mobile.d1sample.ui.login.LoginFragment;
 import com.thalesgroup.mobile.d1sample.ui.physicalcardlist.PhysicalCardListFragment;
 import com.thalesgroup.mobile.d1sample.ui.virtualcardlist.VirtualCardListFragment;
+import com.thalesgroup.mobile.d1sample.util.Constants;
 
 import java.util.Locale;
 
@@ -76,6 +78,10 @@ public class HomeFragment extends AbstractBaseFragment<HomeViewModel> {
         view.findViewById(R.id.bt_virtual_card_list).setOnClickListener(v -> {
             showFragment(VirtualCardListFragment.newInstance(), true);
         });
+
+        if (BuildConfig.FLAVOR.equals(Constants.PRODUCT_FLAVOR_VIRTUAL_CARD)) {
+            view.findViewById(R.id.bt_d1pay_digital_card_list).setVisibility(View.GONE);
+        }
 
         view.findViewById(R.id.bt_d1pay_digital_card_list).setOnClickListener(v -> {
             showFragment(D1PayDigitalCardListFragment.newInstance(), true);

@@ -84,7 +84,7 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
      * @param cardId Card ID.
      */
     public void getCardImages(@NonNull final String cardId) {
-        D1Helper.getInstance().getCardMetadata(cardId, new D1Task.Callback<CardMetadata>() {
+        D1Helper.getInstance().getD1PayCardMetadata(cardId, new D1Task.Callback<CardMetadata>() {
             @Override
             public void onSuccess(final CardMetadata data) {
                 extractImageResources(data);

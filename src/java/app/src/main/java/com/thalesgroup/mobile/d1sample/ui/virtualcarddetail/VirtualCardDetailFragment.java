@@ -20,11 +20,13 @@ import android.widget.Toast;
 import com.thalesgroup.gemalto.d1.card.CardDigitizationState;
 import com.thalesgroup.gemalto.d1.card.State;
 import com.thalesgroup.gemalto.d1.d1pay.D1HCEService;
+import com.thalesgroup.gemalto.d1.validation.BuildConfig;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.gemalto.d1.validation.databinding.FragmentCardDetailBinding;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
 import com.thalesgroup.mobile.d1sample.ui.d1paydigitalcard.D1PayDigitalCardFragment;
 import com.thalesgroup.mobile.d1sample.ui.digitalcardlist.DigitalCardListFragment;
+import com.thalesgroup.mobile.d1sample.util.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -109,6 +111,11 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
         view.findViewById(R.id.bt_show_d1pay_digital_card).setOnClickListener(v -> {
             showFragment(D1PayDigitalCardFragment.newInstance(mCardId), true);
         });
+
+        if (BuildConfig.FLAVOR.equals(Constants.PRODUCT_FLAVOR_VIRTUAL_CARD)) {
+            view.findViewById(R.id.bt_add_card_nfc).setVisibility(View.GONE);
+            view.findViewById(R.id.bt_show_d1pay_digital_card).setVisibility(View.GONE);
+        }
 
         view.findViewById(R.id.bt_add_card_nfc).setOnClickListener(v -> {
             // Check if device has HCE feature.
@@ -205,6 +212,8 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
         mViewModel.getIsOperationSuccesfull().observe(getViewLifecycleOwner(), aBoolean -> hideProgressDialog());
 
         // mViewModel.isCardDigitized(mCardId);
-        mViewModel.isCardDigitizedNfc(mCardId);
+        if (BuildConfig.FLAVOR.equals(Constants.PRODUCT_FLAVOR_D1_PAY)) {
+            mViewModel.isCardDigitizedNfc(mCardId);
+        }
     }
 }
