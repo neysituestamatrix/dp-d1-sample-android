@@ -29,3 +29,6 @@ keystore/
 
 # Include gradle wrapper jar
 !gradle-wrapper.jar
+
+# configuration property files
+src/java/app/src/main/assets/*.properties
