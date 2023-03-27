@@ -6,6 +6,8 @@ package com.thalesgroup.mobile.d1sample.ui.payment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.mobile.d1sample.sdk.payment.PaymentData;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Payment success fragment.
@@ -40,6 +43,9 @@ public class FragmentPaymentSuccess extends AbstractPaymentFragment {
         if (data != null) {
             amountTextView.setText(String.format(Locale.getDefault(), "%s %s", data.getAmount(), data.getCurrency()));
         }
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> requireActivity().finish(), 3000);
+
         return root;
     }
 

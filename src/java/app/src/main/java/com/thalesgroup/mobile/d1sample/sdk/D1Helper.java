@@ -530,6 +530,13 @@ public final class D1Helper {
         getD1PayTask().getD1PayWallet().addDigitalCard(cardId, callback);
     }
 
+    /**
+     * Replenishes the card.
+     *
+     * @param cardId                       Card ID.
+     * @param deviceAuthenticationCallback Device authentication callback.
+     * @param callback                     Callback.
+     */
     public void replenish(@NonNull final String cardId,
                           @NonNull final DeviceAuthenticationCallback deviceAuthenticationCallback,
                           @NonNull final D1Task.Callback<Void> callback) {

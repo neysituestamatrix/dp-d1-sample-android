@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.gemalto.d1.validation.databinding.FragmentD1payDigitalCardDetailBinding;
+import com.thalesgroup.mobile.d1sample.sdk.Configuration;
 import com.thalesgroup.mobile.d1sample.ui.base.AbstractBaseFragment;
 import com.thalesgroup.mobile.d1sample.ui.d1paytransactioinhistory.D1PayTransactionHistoryFragment;
 
@@ -21,7 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.Locale;
 
 /**
  * D1PayDigitalCardFragment Fragment.
@@ -93,6 +98,11 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
             mViewModel.unSetDefaultCard(mCardId);
         });
 
+        view.findViewById(R.id.bt_replenish).setOnClickListener(view12 -> {
+            showProgressDialog("Operation in progress.");
+            mViewModel.replenish(Configuration.cardId, mDeviceAuthenticationCallback);
+        });
+
         view.findViewById(R.id.bt_transaction_history_d1pay_card).setOnClickListener(view1 -> showFragment(D1PayTransactionHistoryFragment.newInstance(mCardId), true));
 
         mViewModel.getIsOperationSuccesfull().observe(getViewLifecycleOwner(), isLogoutSuccessful -> {
@@ -147,4 +157,34 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
         mViewModel.getD1PayDigitalCard(mCardId);
         mViewModel.getCardImages(mCardId);
     }
+
+    private final DeviceAuthenticationCallback mDeviceAuthenticationCallback = new DeviceAuthenticationCallback() {
+        @Override
+        public void onSuccess() {
+            Toast.makeText(requireActivity(), "Authentication OK.", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFailed() {
+            // User authentication failed, the mobile app may ask end user to retry
+            Toast.makeText(requireActivity(), "Authentication Failed.", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(final int fpErrorCode) {
+            // For BIOMETRIC only
+            // Error happened while doing BIOMETRIC authenticate (e.g using wrong finger too many times and the sensor is
+            // locked)
+            // Depending on the fpErrorCode, the mobile application should troubleshoot the end user.
+            Toast.makeText(requireActivity(), String.format(Locale.ENGLISH, "Authentication Error: %d.", fpErrorCode), Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onHelp(final int fpCode, @NonNull final CharSequence detail) {
+            // For BIOMETRIC only
+            // Mobile application may show the fpDetail message to the end user
+            Toast.makeText(requireActivity(), String.format(Locale.ENGLISH, "Authentication Help: %s, code: %d.", detail, fpCode), Toast.LENGTH_SHORT).show();
+        }
+    };
 }

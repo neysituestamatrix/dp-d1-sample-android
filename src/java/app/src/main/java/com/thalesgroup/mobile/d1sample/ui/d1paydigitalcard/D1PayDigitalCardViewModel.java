@@ -11,6 +11,7 @@ import com.thalesgroup.gemalto.d1.D1Task;
 import com.thalesgroup.gemalto.d1.card.CardMetadata;
 import com.thalesgroup.gemalto.d1.card.State;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDigitalCard;
+import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
 import com.thalesgroup.mobile.d1sample.ui.base.BaseViewModel;
 
@@ -32,6 +33,8 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
     public MutableLiveData<Integer> mSetDefaultButtonVisibility = new MutableLiveData<>(View.GONE);
     public MutableLiveData<Integer> mUnsetDefaultButtonVisibility = new MutableLiveData<>(View.GONE);
     public MutableLiveData<Boolean> mIsDeleteCardFinishSuccess = new MutableLiveData<>(Boolean.FALSE);
+    public MutableLiveData<Integer> mReplenishButtonVisibility = new MutableLiveData<>(View.GONE);
+
 
     /**
      * Gets the D1Pay digital card details.
@@ -67,6 +70,12 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
                     } else {
                         mSuspendButtonVisibility.postValue(View.GONE);
                         mResumeButtonVisibility.postValue(View.GONE);
+                    }
+
+                    if (d1PayDigitalCard.isReplenishmentNeeded()) {
+                        mReplenishButtonVisibility.postValue(View.VISIBLE);
+                    } else {
+                        mReplenishButtonVisibility.postValue(View.GONE);
                     }
                 }
             }
@@ -228,6 +237,27 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
 
             @Override
             public void onError(@NonNull final D1Exception exception) {
+                mErrorMessage.postValue(exception.getLocalizedMessage());
+            }
+        });
+    }
+
+    /**
+     * Replenishes the card.
+     *
+     * @param cardId                       Card ID.
+     * @param deviceAuthenticationCallback Device authentication callback.
+     */
+    public void replenish(@NonNull final String cardId, @NonNull final DeviceAuthenticationCallback deviceAuthenticationCallback) {
+        D1Helper.getInstance().replenish(cardId, deviceAuthenticationCallback, new D1Task.Callback<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                mIsOperationSuccesfull.postValue(true);
+                mReplenishButtonVisibility.postValue(View.GONE);
+            }
+
+            @Override
+            public void onError(final @NonNull D1Exception exception) {
                 mErrorMessage.postValue(exception.getLocalizedMessage());
             }
         });
