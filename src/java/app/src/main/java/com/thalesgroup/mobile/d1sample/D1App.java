@@ -5,6 +5,8 @@
 package com.thalesgroup.mobile.d1sample;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,7 +43,6 @@ public class D1App extends Application {
      * Configures D1Pay SDK.
      */
     public void configureD1PaySDK() {
-
         D1Helper.getInstance().configureD1Pay(
                 Configuration.consumerId,
                 this,
@@ -53,7 +54,7 @@ public class D1App extends Application {
 
                     @Override
                     public void onError(@NonNull final List<D1Exception> exceptions) {
-                        Toast.makeText(D1App.this, exceptions.get(0).getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(D1App.this, exceptions.get(0).getLocalizedMessage(), Toast.LENGTH_LONG).show());
                     }
                 });
     }
