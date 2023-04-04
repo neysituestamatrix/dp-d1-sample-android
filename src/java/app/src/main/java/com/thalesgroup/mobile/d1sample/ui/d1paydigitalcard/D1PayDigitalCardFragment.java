@@ -63,8 +63,10 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
     public View onCreateView(@NonNull final LayoutInflater inflater,
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
-        final FragmentD1payDigitalCardDetailBinding binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_d1pay_digital_card_detail, container, false);
+        final FragmentD1payDigitalCardDetailBinding binding = DataBindingUtil.inflate(inflater,
+                                                                                      R.layout.fragment_d1pay_digital_card_detail,
+                                                                                      container,
+                                                                                      false);
         binding.setLifecycleOwner(this);
         binding.setMViewModel(mViewModel);
 
@@ -98,12 +100,16 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
             mViewModel.unSetDefaultCard(mCardId);
         });
 
+        view.findViewById(R.id.bt_manual_mode)
+            .setOnClickListener(view13 -> mViewModel.manualMode(Configuration.cardId));
+
         view.findViewById(R.id.bt_replenish).setOnClickListener(view12 -> {
             showProgressDialog("Operation in progress.");
             mViewModel.replenish(Configuration.cardId, mDeviceAuthenticationCallback);
         });
 
-        view.findViewById(R.id.bt_transaction_history_d1pay_card).setOnClickListener(view1 -> showFragment(D1PayTransactionHistoryFragment.newInstance(mCardId), true));
+        view.findViewById(R.id.bt_transaction_history_d1pay_card)
+            .setOnClickListener(view1 -> showFragment(D1PayTransactionHistoryFragment.newInstance(mCardId), true));
 
         mViewModel.getIsOperationSuccesfull().observe(getViewLifecycleOwner(), isLogoutSuccessful -> {
             hideProgressDialog();
@@ -176,7 +182,9 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
             // Error happened while doing BIOMETRIC authenticate (e.g using wrong finger too many times and the sensor is
             // locked)
             // Depending on the fpErrorCode, the mobile application should troubleshoot the end user.
-            Toast.makeText(requireActivity(), String.format(Locale.ENGLISH, "Authentication Error: %d.", fpErrorCode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(),
+                           String.format(Locale.ENGLISH, "Authentication Error: %d.", fpErrorCode),
+                           Toast.LENGTH_SHORT).show();
 
         }
 
@@ -184,7 +192,9 @@ public class D1PayDigitalCardFragment extends AbstractBaseFragment<D1PayDigitalC
         public void onHelp(final int fpCode, @NonNull final CharSequence detail) {
             // For BIOMETRIC only
             // Mobile application may show the fpDetail message to the end user
-            Toast.makeText(requireActivity(), String.format(Locale.ENGLISH, "Authentication Help: %s, code: %d.", detail, fpCode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(),
+                           String.format(Locale.ENGLISH, "Authentication Help: %s, code: %d.", detail, fpCode),
+                           Toast.LENGTH_SHORT).show();
         }
     };
 }

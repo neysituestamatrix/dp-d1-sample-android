@@ -4,15 +4,18 @@
 
 package com.thalesgroup.mobile.d1sample.ui.d1paydigitalcard;
 
+import android.app.Activity;
 import android.view.View;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
 import com.thalesgroup.gemalto.d1.D1Task;
 import com.thalesgroup.gemalto.d1.card.CardMetadata;
 import com.thalesgroup.gemalto.d1.card.State;
+import com.thalesgroup.gemalto.d1.d1pay.D1PayConfigParams;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDigitalCard;
 import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
+import com.thalesgroup.mobile.d1sample.sdk.payment.D1PayTransactionListener;
 import com.thalesgroup.mobile.d1sample.ui.base.BaseViewModel;
 
 import androidx.annotation.NonNull;
@@ -261,5 +264,14 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
                 mErrorMessage.postValue(exception.getLocalizedMessage());
             }
         });
+    }
+
+    /**
+     * Runs the payment in manual mode.
+     *
+     * @param cardId   Card ID.
+     */
+    public void manualMode(@NonNull final String cardId) {
+        D1Helper.getInstance().manualMode(cardId);
     }
 }

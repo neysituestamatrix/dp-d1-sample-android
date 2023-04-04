@@ -43,19 +43,18 @@ public class D1App extends Application {
      * Configures D1Pay SDK.
      */
     public void configureD1PaySDK() {
-        D1Helper.getInstance().configureD1Pay(
-                Configuration.consumerId,
-                this,
-                new D1Task.ConfigCallback<Void>() {
-                    @Override
-                    public void onSuccess(final Void data) {
-                        // no need to notify UI.
-                    }
+        D1Helper.getInstance().configureD1Pay(this, new D1Task.ConfigCallback<Void>() {
+            @Override
+            public void onSuccess(final Void data) {
+                // no need to notify UI.
+            }
 
-                    @Override
-                    public void onError(@NonNull final List<D1Exception> exceptions) {
-                        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(D1App.this, exceptions.get(0).getLocalizedMessage(), Toast.LENGTH_LONG).show());
-                    }
-                });
+            @Override
+            public void onError(@NonNull final List<D1Exception> exceptions) {
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(D1App.this,
+                                                                              exceptions.get(0).getLocalizedMessage(),
+                                                                              Toast.LENGTH_LONG).show());
+            }
+        });
     }
 }

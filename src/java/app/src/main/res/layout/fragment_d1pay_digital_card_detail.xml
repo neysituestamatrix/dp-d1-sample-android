@@ -72,6 +72,13 @@
                     android:visibility="@{mViewModel.mReplenishButtonVisibility}"
                     android:text="Replenish"/>
 
+                <Button
+                    android:id="@+id/bt_manual_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Pay"/>
+
             </LinearLayout>
         </ScrollView>
 
