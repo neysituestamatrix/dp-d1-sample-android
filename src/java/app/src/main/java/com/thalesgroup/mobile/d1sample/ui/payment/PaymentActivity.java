@@ -10,10 +10,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.thalesgroup.gemalto.d1.validation.R;
+import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
+import com.thalesgroup.mobile.d1sample.sdk.payment.D1PayTransactionListener;
 import com.thalesgroup.mobile.d1sample.sdk.payment.PaymentData;
 import com.thalesgroup.mobile.d1sample.sdk.payment.PaymentErrorData;
 import com.thalesgroup.mobile.d1sample.sdk.payment.PaymentState;
 import com.thalesgroup.mobile.d1sample.util.InternalNotificationsUtils;
+
+import java.util.Objects;
 
 /**
  * Payment activity.
@@ -108,6 +112,8 @@ public class PaymentActivity extends AppCompatActivity {
             mPaymentCountdownReceiver = null;
         }
 
+        Objects.requireNonNull(D1Helper.getInstance().getD1PayTransactionListener()).deactivate();
+
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
@@ -160,7 +166,7 @@ public class PaymentActivity extends AppCompatActivity {
     /**
      * Retrieves the success data.
      *
-     * @return
+     * @return Success data.
      */
     public PaymentData getSuccessData() {
         return mSuccessData;

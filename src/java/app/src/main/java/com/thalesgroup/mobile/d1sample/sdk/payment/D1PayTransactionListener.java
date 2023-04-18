@@ -4,15 +4,11 @@
 
 package com.thalesgroup.mobile.d1sample.sdk.payment;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
 import com.thalesgroup.gemalto.d1.d1pay.ContactlessTransactionListener;
@@ -22,6 +18,12 @@ import com.thalesgroup.gemalto.d1.d1pay.VerificationMethod;
 import com.thalesgroup.mobile.d1sample.ui.payment.PaymentActivity;
 import com.thalesgroup.mobile.d1sample.util.InternalNotificationsUtils;
 import com.thalesgroup.mobile.d1sample.util.UtilsCurrenciesConstants;
+
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Payment listener.
@@ -75,7 +77,6 @@ public class D1PayTransactionListener extends ContactlessTransactionListener {
         // Inform customer application is ready for 2nd TAP.
         // Display transaction details and display the remaining time for the 2nd TAP
 
-
         // Register the timeout callback to update the user on remaining time for the 2nd tap.
         this.registerDeviceAuthTimeoutCallback(new DeviceAuthenticationTimeoutCallback() {
             @Override
@@ -113,7 +114,6 @@ public class D1PayTransactionListener extends ContactlessTransactionListener {
 
         // All current state values are no longer relevant.
         resetState();
-
         updateState(PaymentState.STATE_ON_ERROR,
                     new PaymentErrorData(error.getErrorCode().name(), error.getLocalizedMessage(), mAmount, mCurrency));
     }
@@ -128,7 +128,8 @@ public class D1PayTransactionListener extends ContactlessTransactionListener {
             mCurrency = null;
         } else {
             mAmount = getTransactionData().getAmount();
-            mCurrency = UtilsCurrenciesConstants.getCurrency(getTransactionData().getCurrencyCode()).getCurrencyCode();
+            mCurrency = Objects.requireNonNull(UtilsCurrenciesConstants.getCurrency(getTransactionData().getCurrencyCode()))
+                               .getCurrencyCode();
         }
 
         if (transactionData != null) {

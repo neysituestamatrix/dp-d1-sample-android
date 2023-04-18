@@ -17,6 +17,7 @@ import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
 import com.thalesgroup.mobile.d1sample.sdk.payment.PaymentData;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 
@@ -72,7 +73,8 @@ public class FragmentPaymentAuthentication extends AbstractPaymentFragment {
                                                                                                 mDeviceAuthenticationCallback);
 
 
-            D1Helper.getInstance().getD1PayTransactionListener().startAuthenticate(authenticationParameter);
+            Objects.requireNonNull(D1Helper.getInstance().getD1PayTransactionListener())
+                   .startAuthenticate(authenticationParameter);
         }
     }
 
