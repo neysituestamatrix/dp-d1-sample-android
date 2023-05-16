@@ -234,7 +234,7 @@ public final class D1Helper {
      */
     public void getCardDigitizationState(@NonNull final String cardId,
                                          @NonNull final D1Task.Callback<CardDigitizationState> callback) {
-        getD1Task().getCardDigitizationState(cardId, callback);
+        getD1Task().getD1PushWallet().getCardDigitizationState(cardId, OEMPayType.GOOGLE_PAY, callback);
     }
 
     /**
@@ -243,8 +243,8 @@ public final class D1Helper {
      * @param cardId   Card ID.
      * @param callback Callback.
      */
-    public void digitizeCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().addDigitalCardToOEM(cardId, callback);
+    public void digitizeCard(@NonNull final String cardId, @NonNull final Activity activity, @NonNull final D1Task.Callback<Object> callback) {
+        getD1Task().getD1PushWallet().addDigitalCardToOEM(cardId, OEMPayType.GOOGLE_PAY, activity, callback);
     }
 
     /**
@@ -254,7 +254,7 @@ public final class D1Helper {
      * @param callback Callback.
      */
     public void activateDigitalCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().activateDigitalCard(cardId, callback);
+        getD1Task().getD1PushWallet().activateDigitalCard(cardId, OEMPayType.GOOGLE_PAY, callback);
     }
 
     /**

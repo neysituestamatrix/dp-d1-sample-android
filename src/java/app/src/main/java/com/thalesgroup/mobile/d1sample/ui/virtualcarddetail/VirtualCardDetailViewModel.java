@@ -4,6 +4,7 @@
 
 package com.thalesgroup.mobile.d1sample.ui.virtualcarddetail;
 
+import android.app.Activity;
 import android.view.View;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
@@ -180,10 +181,10 @@ public class VirtualCardDetailViewModel extends BaseViewModel {
      *
      * @param cardId Card ID.
      */
-    public void digitizeCard(@NonNull final String cardId) {
-        D1Helper.getInstance().digitizeCard(cardId, new D1Task.Callback<Void>() {
+    public void digitizeCard(@NonNull final String cardId, @NonNull final Activity activity) {
+        D1Helper.getInstance().digitizeCard(cardId, activity, new D1Task.Callback<Object>() {
             @Override
-            public void onSuccess(final Void data) {
+            public void onSuccess(final Object data) {
                 mIsOperationSuccesfull.postValue(true);
                 isCardDigitized(cardId); // get card state
             }
@@ -205,6 +206,7 @@ public class VirtualCardDetailViewModel extends BaseViewModel {
         D1Helper.getInstance().registerCardDataChangeListenerD1Pay((card, state) -> {
             if (card != null && state == State.ACTIVE) {
                 mDigitizationFinishedOk.postValue(true);
+
                 isCardDigitizedNfc(card);
                 D1Helper.getInstance().unregisterCardDataChangeListenerD1Pay();
             }

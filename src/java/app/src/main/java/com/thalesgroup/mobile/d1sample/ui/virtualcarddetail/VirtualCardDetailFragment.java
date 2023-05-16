@@ -30,6 +30,8 @@ import com.thalesgroup.mobile.d1sample.util.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
@@ -101,7 +103,7 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
 
         view.findViewById(R.id.bt_add_card).setOnClickListener(v -> {
             showProgressDialog("Card digitization.");
-            mViewModel.digitizeCard(mCardId);
+            mViewModel.digitizeCard(mCardId, requireActivity());
         });
 
         view.findViewById(R.id.bt_show_digital_cards).setOnClickListener(v -> {
@@ -155,7 +157,7 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
             activate.setAction(CardEmulation.ACTION_CHANGE_DEFAULT);
             activate.putExtra(CardEmulation.EXTRA_SERVICE_COMPONENT, componentName);
             activate.putExtra(CardEmulation.EXTRA_CATEGORY, CardEmulation.CATEGORY_PAYMENT);
-            getActivity().startActivity(activate);
+            requireActivity().startActivity(activate);
         }
     }
 
@@ -189,7 +191,6 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
             if (cardDigitizationState == CardDigitizationState.DIGITIZED) {
                 // if card is already digitized, check tap&pay settings
                 hideProgressDialog();
-                Toast.makeText(getActivity(), "Card digitized", Toast.LENGTH_LONG).show();
                 checkTapAndPaySettings();
             }
         });
@@ -199,6 +200,8 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
             if (digitizationStartedOk) {
                 Toast.makeText(getActivity(), "Digitization started OK", Toast.LENGTH_LONG).show();
                 Toast.makeText(getActivity(), "Waiting for push message", Toast.LENGTH_LONG).show();
+
+                mViewModel.mDigitizationStartedOk.postValue(false); // reset to prevent UI update when screen returns.
             }
         });
 
@@ -206,6 +209,8 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
             hideProgressDialog();
             if (digitizationFinishedOk) {
                 Toast.makeText(getActivity(), "Digitization finished OK", Toast.LENGTH_LONG).show();
+
+                mViewModel.mDigitizationFinishedOk.postValue(false); // reset to prevent UI update when screen returns.
             }
         });
 

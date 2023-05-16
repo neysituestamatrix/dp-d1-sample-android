@@ -14,6 +14,7 @@ import com.thalesgroup.gemalto.d1.d1pay.AuthenticationParameter;
 import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
+import com.thalesgroup.mobile.d1sample.sdk.payment.D1PayTransactionListener;
 import com.thalesgroup.mobile.d1sample.sdk.payment.PaymentData;
 
 import java.util.Locale;
@@ -71,7 +72,6 @@ public class FragmentPaymentAuthentication extends AbstractPaymentFragment {
                             mAuthData.getAmount(), mAuthData.getCurrency()),
                                                                                                 "Cancel",
                                                                                                 mDeviceAuthenticationCallback);
-
 
             Objects.requireNonNull(D1Helper.getInstance().getD1PayTransactionListener())
                    .startAuthenticate(authenticationParameter);
