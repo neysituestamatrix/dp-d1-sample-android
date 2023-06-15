@@ -254,7 +254,7 @@ public class D1PayDigitalCardViewModel extends BaseViewModel {
     public void replenish(@NonNull final String cardId, @NonNull final DeviceAuthenticationCallback deviceAuthenticationCallback) {
         D1Helper.getInstance().replenish(cardId, deviceAuthenticationCallback, new D1Task.Callback<Void>() {
             @Override
-            public void onSuccess(Void unused) {
+            public void onSuccess(final Void unused) {
                 mIsOperationSuccesfull.postValue(true);
                 mReplenishButtonVisibility.postValue(View.GONE);
             }

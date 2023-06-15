@@ -57,7 +57,7 @@ Please contact your Thales representative to recieve D1 SDK and a working config
 
 ### D1 SDK
 
-This sample application was tested with **D1 SDK version 2.4.0**.
+This sample application was tested with **D1 SDK version 3.0.0**.
 Please refer to the sample application `build.gradle` files for the correct location of D1 SDK.
 
 **`src/java/build.gradle`**

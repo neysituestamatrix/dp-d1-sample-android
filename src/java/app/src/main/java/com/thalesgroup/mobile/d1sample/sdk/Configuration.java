@@ -73,10 +73,11 @@ public class Configuration {
      * @return Value, if value is {@code null} then {@code IllegalStateException} is thrown.
      */
     private static String getProperty(@NonNull final String key, @NonNull final Context context, @NonNull final String fileName) {
+        InputStream inputStream = null;
         try {
             final Properties properties = new Properties();
             final AssetManager assetManager = context.getAssets();
-            final InputStream inputStream = assetManager.open(fileName);
+            inputStream = assetManager.open(fileName);
             properties.load(inputStream);
 
             final String property = properties.getProperty(key);
@@ -84,11 +85,17 @@ public class Configuration {
                 throw new IllegalStateException(String.format("Missing mandatory property: %s", key));
             }
 
-            inputStream.close();
-
             return property;
         } catch (final IOException exception) {
             throw new IllegalStateException(exception);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    // nothing to do
+                }
+            }
         }
     }
 }

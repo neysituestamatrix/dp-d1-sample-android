@@ -8,10 +8,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.thalesgroup.gemalto.d1.D1Exception;
+import com.thalesgroup.gemalto.d1.D1Task;
 import com.thalesgroup.gemalto.d1.card.AssetContent;
 import com.thalesgroup.gemalto.d1.card.CardAsset;
 import com.thalesgroup.gemalto.d1.card.CardMetadata;
 
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -48,32 +53,38 @@ public class BaseViewModel extends ViewModel {
      * @param cardMetadata Card meta data.
      */
     protected void extractImageResources(final CardMetadata cardMetadata) {
-        if (cardMetadata.getAssetList() == null) {
-            return;
-        }
+        cardMetadata.getAssetList(new D1Task.Callback<List<CardAsset>>() {
+            @Override
+            public void onSuccess(final List<CardAsset> cardAssets) {
+                if (cardAssets == null) {
+                    return;
+                }
 
-        for (final CardAsset cardAsset : cardMetadata.getAssetList()) {
-            final CardAsset.AssetType assetType = cardAsset.getType();
+                for (final CardAsset cardAsset : cardAssets) {
+                    final CardAsset.AssetType assetType = cardAsset.getType();
 
-            if (cardAsset.getContents() == null) {
-                continue;
-            }
-
-            for (final AssetContent assetContent : cardAsset.getContents()) {
-                if (assetContent.getMimeType() == AssetContent.MimeType.PNG) {
-                    final byte[] data = Base64.decode(assetContent.getEncodedData(), Base64.DEFAULT);
-                    final Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    if (assetType == CardAsset.AssetType.CARD_BACKGROUND) {
-                        mCardBackground.postValue(bitmap);
-                    } else {
-                        mIcon.postValue(bitmap);
+                    for (final AssetContent assetContent : cardAsset.getContents()) {
+                        if (assetContent.getMimeType() == AssetContent.MimeType.PNG) {
+                            final byte[] data = Base64.decode(assetContent.getEncodedData(), Base64.DEFAULT);
+                            final Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            if (assetType == CardAsset.AssetType.CARD_BACKGROUND) {
+                                mCardBackground.postValue(bitmap);
+                            } else {
+                                mIcon.postValue(bitmap);
+                            }
+                        } else if (assetContent.getMimeType() == AssetContent.MimeType.SVG) { // NOPMD - TODO
+                            // TODO
+                        } else if (assetContent.getMimeType() == AssetContent.MimeType.PDF) { // NOPMD - TODO
+                            // TODO
+                        }
                     }
-                } else if (assetContent.getMimeType() == AssetContent.MimeType.SVG) { // NOPMD - TODO
-                    // TODO
-                } else if (assetContent.getMimeType() == AssetContent.MimeType.PDF) { // NOPMD - TODO
-                    // TODO
                 }
             }
-        }
+
+            @Override
+            public void onError(@NonNull final D1Exception exception) {
+                mErrorMessage.postValue(exception.getLocalizedMessage());
+            }
+        });
     }
 }
