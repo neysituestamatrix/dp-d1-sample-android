@@ -11,13 +11,13 @@ To be able to build and run the sample application:
 
 The following files need to be added to the project:
 
-1. D1 backend configuration
+1. D1 backend configuration.
    
 ```bash
 src/java/app/src/main/assets/d1.properties
 ```
 
-2. D1 SDK
+2. D1 SDK.
 
 ```bash
 src/java/app/libs
@@ -25,7 +25,7 @@ src/java/app/libs
                └── d1-release.aar
 ```
 
-3. Keystore
+3. Keystore.
 
 ```bash
 src/java/app/keystore/keystore
@@ -35,7 +35,7 @@ src/java/app/keystore/keystore
 src/java/app/src/main/assets/keystore.properties
 ```
 
-4. D1Pay configuration
+4. D1Pay configuration.
 
 ```bash
 src/java/app/src/main/assets
@@ -45,7 +45,7 @@ src/java/app/src/main/assets
 
 ```
 
-5. `google-services.json` file
+5. `google-services.json` file.
 
 ```bash
 src/java/app/google-services.json
@@ -89,13 +89,13 @@ src/java/app/
     └── d1-release.aar
 ```
 
-For more details, please refer to the [D1 SDK Integration](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/e984dad0fca5e-sdk-integration-on-android) section of the D1 Developer Portal.
+For more details, please refer to the [D1 SDK Integration](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/f2c8e49a37919-integrate-sdk-binary-into-your-android-application) section of the D1 Developer Portal.
 
 ### Configuration
 
 #### D1 backend configuration
 
-The `d1.properties` file which holds the D1 backend configuration needs to be added to the project:
+The `d1.properties` file which holds the D1 backend configuration needs to be added to the project.
 
 **`src/java/app/src/main/assets/d1.properties`**
 ```bash
@@ -116,18 +116,18 @@ SANDBOX_PRIVATE_KEY =
 The `d1.properties` file is not kept under version control to prevent it from being overwritten during repository update.
 
 
-For more details, please refer to the [D1 SDK Setup](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/ZG9jOjI4ODMzMjkz-onboarding) section of the D1 Developer Portal.
+For more details, please refer to the [D1 SDK Setup](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/4f003bf306c04-initial-setup) section of the D1 Developer Portal.
 
 #### Authentication
 
 To receive access to all D1 services, the user needs to authenticate with D1. This authentication is done using a [JSON Web Token (JWT)](https://auth0.com/docs/secure/tokens/json-web-tokens). For simplicity this token is generated in the sample application. The JWT configuration is part of the `d1.properties` file.
 
-For more details, please refer to the [D1 SDK Login](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/70d2f0c3dbfd9-login) section of the D1 Developer Portal.
+For more details, please refer to the [D1 SDK Login](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/97566495c786d-sdk-login) section of the D1 Developer Portal.
 
 
 #### D1Pay configuration
 
-To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/0a7cb56c00838-d1-pay) services, the following configurations need to be added:
+To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/d6a8ba3f3c186-d1-pay-introduction) services, the following configurations need to be added:
 
 * Google services
 * Android keystore
@@ -135,11 +135,11 @@ To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/bran
 
 ##### Google services
 
-[D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/0a7cb56c00838-d1-pay) services use [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging). For this reason the corresponding `google-services.json` file needs to be added to the sample application.
+[D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/d6a8ba3f3c186-d1-pay-introduction) services use [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging). For this reason the corresponding `google-services.json` file needs to be added to the sample application.
 
 ##### Android keystore
 
-To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/0a7cb56c00838-d1-pay) services, the sample application needs to be signed with a specific keystore - [Mobile banking application signing key](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/4723a96dffe6e-onboarding#mobile-banking-application-signing-key). The sample application needs to be updated with the appropriate keystore and signing configuration.
+To use [D1Pay](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/d6a8ba3f3c186-d1-pay-introduction) services, the sample application needs to be signed with a specific keystore - [Mobile banking application signing key](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/627614736c261-what-is-app-pk-value-and-how-to-obtain-it). The sample application needs to be updated with the appropriate keystore and signing configuration.
 
 **`src/java/app/build.gradle`**
 ```groovy
@@ -270,7 +270,7 @@ CPS_CONNECTION_RETRY_INTERVAL=10000
 
 These files are not kept under version control to prevent them from being overwritten during repository update.
 
-For more details, please refer to the [D1Pay Service Application Setup](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/6ef89ec169de9-application-setup) section of the D1 Developer Portal.
+For more details, please refer to the [D1Pay Service Application Setup](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/09e7447f9cb9b-d1-pay-application-setup) section of the D1 Developer Portal.
 
 ## Build and run project
 
@@ -301,7 +301,7 @@ Most of D1 SDK related source code is located in the following classes:
 
 ## Documentation
 
-[D1 Developer portal](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/ZG9jOjE1MjEwNTMy-digital-first-d1-ux)
+[D1 Developer portal](https://thales-dis-dbp.stoplight.io/docs/d1-developer-portal/branches/main/de9abde9af194-thales-d1-a-card-api-to-modernise-card-issuance)
 
 
 ## Contributing
