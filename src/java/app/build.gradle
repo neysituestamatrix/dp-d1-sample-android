@@ -40,28 +40,16 @@ android {
         }
     }
 
-    flavorDimensions "version"
-    productFlavors {
-        virtualCard {
-            dimension "version"
-        }
-        d1Pay {
-            dimension "version"
-        }
-    }
-
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            productFlavors.d1Pay.signingConfig signingConfigs.signingD1Pay
-            productFlavors.virtualCard.signingConfig signingConfig
-            signingConfig null
+            signingConfig signingConfigs.signingD1Pay
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            productFlavors.d1Pay.signingConfig signingConfigs.signingD1Pay
+            signingConfig signingConfigs.signingD1Pay
         }
     }
 

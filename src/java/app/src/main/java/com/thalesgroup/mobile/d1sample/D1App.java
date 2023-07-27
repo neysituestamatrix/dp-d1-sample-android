@@ -14,10 +14,8 @@ import androidx.annotation.NonNull;
 
 import com.thalesgroup.gemalto.d1.D1Exception;
 import com.thalesgroup.gemalto.d1.D1Task;
-import com.thalesgroup.gemalto.d1.validation.BuildConfig;
 import com.thalesgroup.mobile.d1sample.sdk.Configuration;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
-import com.thalesgroup.mobile.d1sample.util.Constants;
 
 import java.util.List;
 
@@ -34,9 +32,7 @@ public class D1App extends Application {
         Configuration.loadConfigurationFromAssets(this);
 
         // if D1Pay is in scope, we need to init D1 there in order to support immediate background payment
-        if (BuildConfig.FLAVOR.equals(Constants.PRODUCT_FLAVOR_D1_PAY)) {
-            configureD1PaySDK();
-        }
+        configureD1PaySDK();
     }
 
     /**

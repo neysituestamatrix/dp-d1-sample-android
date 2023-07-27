@@ -32,9 +32,7 @@ import com.thalesgroup.gemalto.d1.d1pay.D1PayDataChangedListener;
 import com.thalesgroup.gemalto.d1.d1pay.D1PayDigitalCard;
 import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
 import com.thalesgroup.gemalto.d1.d1pay.TransactionHistory;
-import com.thalesgroup.gemalto.d1.validation.BuildConfig;
 import com.thalesgroup.mobile.d1sample.sdk.payment.D1PayTransactionListener;
-import com.thalesgroup.mobile.d1sample.util.Constants;
 import com.thalesgroup.mobile.d1sample.util.HexUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -90,20 +88,16 @@ public final class D1Helper {
         final D1Params coreConfig = ConfigParams.buildConfigCore(consumerId);
         final D1Params cardConfig = ConfigParams.buildConfigCard(activity, OEMPayType.GOOGLE_PAY, null);
 
-        D1Params[] d1Params;
-        if (BuildConfig.FLAVOR.equals(Constants.PRODUCT_FLAVOR_D1_PAY)) {
-            // D1Pay config.
-            final D1PayConfigParams d1PayConfigParams = D1PayConfigParams.getInstance();
-            d1PayConfigParams.setContactlessTransactionListener(
-                    mD1PayTransactionListener = new D1PayTransactionListener(activity.getApplicationContext()));
-            d1PayConfigParams.setReplenishAuthenticationUIStrings("Replenishment Title",
-                                                                  "Replenishment Subtitle",
-                                                                  "Replenishment Description",
-                                                                  "Cancel");
-            d1Params = new D1Params[]{coreConfig, cardConfig, d1PayConfigParams};
-        } else {
-            d1Params = new D1Params[]{coreConfig, cardConfig};
-        }
+        // D1Pay config.
+        final D1PayConfigParams d1PayConfigParams = D1PayConfigParams.getInstance();
+        d1PayConfigParams.setContactlessTransactionListener(
+                mD1PayTransactionListener = new D1PayTransactionListener(activity.getApplicationContext()));
+        d1PayConfigParams.setReplenishAuthenticationUIStrings("Replenishment Title",
+                                                              "Replenishment Subtitle",
+                                                              "Replenishment Description",
+                                                              "Cancel");
+
+        final D1Params[] d1Params = new D1Params[]{coreConfig, cardConfig, d1PayConfigParams};
 
         synchronized (INSTANCE) {
             mSdkConfigurationState.postValue(SdkConfigState.WORKING);
@@ -116,9 +110,7 @@ public final class D1Helper {
                     mSdkConfigurationState.postValue(SdkConfigState.CONFIGURED);
                 }
 
-                if (BuildConfig.FLAVOR.equals(Constants.PRODUCT_FLAVOR_D1_PAY)) {
-                    getCurrentPushToken();
-                }
+                getCurrentPushToken();
 
                 callback.onSuccess(unused);
             }

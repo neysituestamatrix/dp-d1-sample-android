@@ -12,20 +12,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.thalesgroup.gemalto.d1.D1Exception;
-import com.thalesgroup.gemalto.d1.d1pay.AuthenticationParameter;
-import com.thalesgroup.gemalto.d1.d1pay.ContactlessTransactionListener;
-import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationCallback;
-import com.thalesgroup.gemalto.d1.d1pay.DeviceAuthenticationTimeoutCallback;
-import com.thalesgroup.gemalto.d1.d1pay.TransactionData;
-import com.thalesgroup.gemalto.d1.d1pay.VerificationMethod;
 import com.thalesgroup.gemalto.d1.validation.R;
 import com.thalesgroup.mobile.d1sample.sdk.D1Helper;
 import com.thalesgroup.mobile.d1sample.ui.splash.SplashFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
