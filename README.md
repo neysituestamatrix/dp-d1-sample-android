@@ -276,19 +276,10 @@ For more details, please refer to the [D1Pay Service Application Setup](https://
 
 After all of the configurations have been added, the application can be build. Application can be build either using Android Studio, or from the command line.
 
-The application consists of 2 build flavors:
-
-`virtualCard` - Virtual card use case.
-`d1Pay` - D1Pay use case.
 
 ```bash
->> ./gradlew assembleVirtualCard
+>> ./gradlew assemble
 >> adb install  app/build/outputs/apk/virtualCard/debug/app-virtualCard-debug.apk
-```
-
-```bash
->> ./gradlew assembleVirtualCard
->> adb install  app/build/outputs/apk/d1Pay/debug/app-d1Pay-debug.apk
 ```
 
 ## Source code overview
