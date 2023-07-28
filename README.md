@@ -279,7 +279,7 @@ After all of the configurations have been added, the application can be build. A
 
 ```bash
 >> ./gradlew assemble
->> adb install  app/build/outputs/apk/virtualCard/debug/app-virtualCard-debug.apk
+>> adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ## Source code overview
