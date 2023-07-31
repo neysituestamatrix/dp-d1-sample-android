@@ -181,10 +181,11 @@ public class VirtualCardDetailViewModel extends BaseViewModel {
      *
      * @param cardId Card ID.
      */
-    public void digitizeCard(@NonNull final String cardId, @NonNull final Activity activity) {
-        D1Helper.getInstance().digitizeCard(cardId, activity, new D1Task.Callback<Object>() {
+    public void digitizeCard(@NonNull final String cardId) {
+        D1Helper.getInstance().digitizeCard(cardId, new D1Task.Callback<Void>() {
+
             @Override
-            public void onSuccess(final Object data) {
+            public void onSuccess(Void unused) {
                 mIsOperationSuccesfull.postValue(true);
                 isCardDigitized(cardId); // get card state
             }

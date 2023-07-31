@@ -101,7 +101,7 @@ public class VirtualCardDetailFragment extends AbstractBaseFragment<VirtualCardD
 
         view.findViewById(R.id.bt_add_card).setOnClickListener(v -> {
             showProgressDialog("Card digitization.");
-            mViewModel.digitizeCard(mCardId, requireActivity());
+            mViewModel.digitizeCard(mCardId);
         });
 
         view.findViewById(R.id.bt_show_digital_cards).setOnClickListener(v -> {
