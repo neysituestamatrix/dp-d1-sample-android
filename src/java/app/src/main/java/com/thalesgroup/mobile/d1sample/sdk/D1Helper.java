@@ -240,16 +240,6 @@ public final class D1Helper {
     }
 
     /**
-     * Activates the digital card.
-     *
-     * @param cardId   Card ID.
-     * @param callback Callback.
-     */
-    public void activateDigitalCard(@NonNull final String cardId, @NonNull final D1Task.Callback<Void> callback) {
-        getD1Task().getD1PayWallet().addDigitalCard(cardId, callback);
-    }
-
-    /**
      * Activates the physical card.
      *
      * @param cardId         Card ID.
